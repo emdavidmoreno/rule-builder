@@ -3,10 +3,19 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { PassengerProvider } from './context/PassengerContext';
+import { NavigationProvider } from './context/NavigationContext';
+import { RuleProvider } from './context/RuleContext';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <PassengerProvider>
+      <NavigationProvider>
+        <RuleProvider>
+          <App />
+        </RuleProvider>
+      </NavigationProvider>
+    </PassengerProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
