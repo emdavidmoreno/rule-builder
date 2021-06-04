@@ -9,7 +9,8 @@ export const RuleProvider = ({children}) => {
   const [rules, setRules] = useState([{
     type: TOTAL_RULE,
     paxs: ['age1'],
-    total: 0
+    total: 0,
+    isEditing: false,
   }]);
 
   return (
