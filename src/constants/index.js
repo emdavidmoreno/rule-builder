@@ -28,7 +28,7 @@ export const EQUAL_TO = '=';
  */
 
 export const RULE_DEFAULT_FORMAT = 'default';
-export const RULE_COMPAT_FORMAT = 'compact';
+export const RULE_COMPACT_FORMAT = 'compact';
 export const RULE_EXTENDED_FORMAT = 'extended';
 
 
