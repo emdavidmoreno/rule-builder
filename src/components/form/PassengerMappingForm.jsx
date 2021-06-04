@@ -53,26 +53,27 @@ const PassengerMappingForm = () => {
         {formFielData.map((field, idx) => (
           <li
             key={idx}
-            className="flex w-full py-2 px-2 justify-between"
+            className="flex w-full py-1 px-2 justify-between"
           > 
             <div className="flex items-center justify-center">
-              <label className="flex flex-row items-center">
-                <input 
+              <div class="relative">
+                <input
+                  id={idx}
                   type="checkbox" 
-                  name="isActive" 
-                  id={idx} 
+                  name="isActive"
                   checked={field.isActive}
+                  class="inline-block align-middle" 
                   onChange={()=> handleEnableDisablePax(idx)}
                 />
-                {` Passenger${idx + 1}`}
-              </label>
+                <label class="inline-block align-middle ml-1" for="remember">{` Passenger${idx + 1}`}</label>
+              </div>
             </div>
             <div className="flex flex-col items-start">
               <label className="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">Total passengers</label>
               <input 
                 id={idx}
                 name={'label'}
-                className="py-1 px-3 rounded-lg border-2 border-gray-300 mt-1 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent" 
+                className="flex w-full py-1 px-3 rounded-md border-2 border-gray-300 mt-1 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent" 
                 type="text" 
                 placeholder="Total passengers" 
                 value={field.label}
