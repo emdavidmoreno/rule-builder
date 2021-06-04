@@ -5,16 +5,17 @@ function totalRule (total = 0, passengers = []) {
   return `{"<=":[{"+":[${variables}]}, ${total}]}`
 }
 
-function simpleRule ({pax = '', min = 0, max = 0}) {
-  return `{"and": [{">=":["${pax}", ${min}]}, {"<=":["${pax}", ${max}]}]}`;
+export const rangeRule =  ({pax = '', min = 0, max = 0}) => {
+  return `{"and": [{">=":[{"var": "${pax}"}, ${min}]}, {"<=":["var": "${pax}", ${max}]}]}`;
 }
+
 
 export default function rulesSTR (total = 0, passengers = []) {
   return (
 `{
 "and":[
   ${totalRule(total, passengers)},
-  ${passengers.map((p = {}) => simpleRule(p)).join(',\n')}
+  ${passengers.map((p = {}) => rangeRule(p)).join(',\n')}
 ]}`
   )
 }
