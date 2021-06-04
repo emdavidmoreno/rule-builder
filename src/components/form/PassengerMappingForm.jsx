@@ -1,5 +1,7 @@
 import React, {useEffect, useState } from 'react';
+import { TOTAL_RULE } from '../../constants';
 import { usePassengers } from '../../context/PassengerContext';
+import { useRules } from '../../context/RuleContext';
 const initialPassengers = new Array(9).fill(null)
   .map((item, idx) =>({
     label: '',
@@ -13,6 +15,7 @@ const initialPassengers = new Array(9).fill(null)
 const PassengerMappingForm = () => {
   const [formFielData, setFormFielData] = useState(initialPassengers);
   const { passengers, setPassengers } = usePassengers();
+  const { rules, setRules } = useRules();
 
   useEffect(()=>{
     return ()=> {
@@ -22,13 +25,18 @@ const PassengerMappingForm = () => {
         .map(field => {
           return paxMap.has(field.value) ? 
           paxMap.get(field.value) : {
-            name: field.value, 
+            value: field.value, 
             label: field.label,
-            min: 0,
-            max: 0
           }
         });
       setPassengers(newPax);
+      setRules(rules.map(rule=>{
+        return rule.type !== TOTAL_RULE ? rule
+          : {
+            ...rule,
+            paxs: newPax.map(p=>p.value),
+          }
+      }))
     }
   }, [])
 
