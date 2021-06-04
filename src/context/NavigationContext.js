@@ -3,7 +3,7 @@ import { createContext, useContext, useState } from "react";
 const NavigationContext = createContext();
 
 export const NavigationProvider = ({children}) => {
-  const [steps, setSteps] = useState(4);
+  const [steps, setSteps] = useState(2);
   const [current, setCurrent] = useState(1);
   return (
   <NavigationContext.Provider value={{
