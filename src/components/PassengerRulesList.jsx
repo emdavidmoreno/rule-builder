@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PAX_VS_NUMBER_RULE, PAX_VS_PAX_RULE, RANGE_RULE, SIMPLE_RULE, SUM_PAX_VS_NUMBER_RULE, SUM_PAX_VS_SUM_PAX_RULE, TOTAL_RULE } from '../constants';
+import { SUM_PAX_VS_PAX_RULE, PAX_VS_PAX_RULE, RANGE_RULE, SIMPLE_RULE, SUM_PAX_VS_NUMBER_RULE, SUM_PAX_VS_SUM_PAX_RULE } from '../constants';
 import { useRules } from '../context/RuleContext';
 import RangeRuleForm from './form/RangeRuleForm';
 import SimpleRuleForm from './form/SimpleRuleForm';
@@ -46,12 +46,12 @@ const PassengerRulesList = () => {
           isEditing: true,
         }]);
 
-      case PAX_VS_NUMBER_RULE:
+      case SUM_PAX_VS_PAX_RULE:
         return setRules([...rules, {
-          type: PAX_VS_NUMBER_RULE,
-          pax: '',
+          type: SUM_PAX_VS_PAX_RULE,
+          paxs: [],
           comparison: '',
-          number: 0,
+          pax: '',
           isEditing: true,
         }]);
       
@@ -124,8 +124,8 @@ const PassengerRulesList = () => {
             action: ()=> AddRule(PAX_VS_PAX_RULE),
           },
           {
-            label: 'Pax vs Number rule',
-            action: ()=> AddRule(SUM_PAX_VS_NUMBER_RULE),
+            label: 'Sum Pax vs pax rule',
+            action: ()=> AddRule(SUM_PAX_VS_PAX_RULE),
           },
           {
             label: 'Sum Pax vs Number rule',
@@ -141,21 +141,6 @@ const PassengerRulesList = () => {
         {rules.length > 0 && rules.map((r, i) => {
           return (
             <li key={i}>
-              { (r.type === RANGE_RULE && r.isEditing) && (
-              <RangeRuleForm 
-                {...r} id={i}
-                handleChange={handleChangeRuleValues}
-                handleSave={saveRule} 
-              />
-              )}
-              { (r.type === RANGE_RULE && !r.isEditing) && (
-                <RangeRuleView
-                  {...r}
-                  id={i}
-                  handleEdit={editRule}
-                  handleRemove={removeRule}
-                />
-              )}
               {(r.type === SIMPLE_RULE && r.isEditing) && (
                 <SimpleRuleForm
                   {...r} 
@@ -172,15 +157,32 @@ const PassengerRulesList = () => {
                   handleRemove={removeRule}
                 />
               )}
+              { (r.type === RANGE_RULE && r.isEditing) && (
+              <RangeRuleForm 
+                {...r} id={i}
+                handleChange={handleChangeRuleValues}
+                handleSave={saveRule} 
+              />
+              )}
+              { (r.type === RANGE_RULE && !r.isEditing) && (
+                <RangeRuleView
+                  {...r}
+                  id={i}
+                  handleEdit={editRule}
+                  handleRemove={removeRule}
+                />
+              )}
               {(r.type === PAX_VS_PAX_RULE && r.isEditing) && 'pax vs pax  rule form'}
               {(r.type === PAX_VS_PAX_RULE && !r.isEditing) && 'pax vs pax  rule view'}
+
+              {(r.type === SUM_PAX_VS_PAX_RULE && r.isEditing) && 'sum pax vs pax  rule form'}
+              {(r.type === SUM_PAX_VS_PAX_RULE && !r.isEditing) && 'sum pax vs pax  rule view'}
 
               {(r.type === SUM_PAX_VS_NUMBER_RULE && r.isEditing) && 'sum pax vs number  rule form'}
               {(r.type === SUM_PAX_VS_NUMBER_RULE && !r.isEditing) && 'sum pax vs number  rule view'}
 
               {(r.type === SUM_PAX_VS_SUM_PAX_RULE && r.isEditing) && 'sum pax vs sum pax rule form'}
               {(r.type === SUM_PAX_VS_SUM_PAX_RULE && !r.isEditing) && 'sum pax vs sum pax rule view'}
-
             </li>
           )
         })}
