@@ -38,6 +38,7 @@ const PassengerMappingForm = () => {
           }
       }))
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleChangeLabel = (value, index) => {
@@ -51,8 +52,6 @@ const PassengerMappingForm = () => {
     updatedformFielData[index].isActive = !updatedformFielData[index].isActive;
     setFormFielData(updatedformFielData);
   }
-
-
   
   return (
     <div className="flex flex-col mx-auto w-full lg:w-1/2">
@@ -64,16 +63,17 @@ const PassengerMappingForm = () => {
             className="flex w-full py-1 px-2 justify-between"
           > 
             <div className="flex items-center justify-center">
-              <div class="relative">
+              <div className="relative">
                 <input
                   id={idx}
                   type="checkbox" 
                   name="isActive"
                   checked={field.isActive}
-                  class="inline-block align-middle" 
+                  className="inline-block align-middle" 
                   onChange={()=> handleEnableDisablePax(idx)}
+                  disabled={idx === 0}
                 />
-                <label class="inline-block align-middle ml-1" for="remember">{` Passenger${idx + 1}`}</label>
+                <label className="inline-block align-middle ml-1" htmlFor="remember">{` Passenger${idx + 1}`}</label>
               </div>
             </div>
             <div className="flex flex-col items-start">

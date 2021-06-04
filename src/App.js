@@ -28,7 +28,7 @@ function App() {
   
   useEffect(()=>{
     const paxs = passengers.map(p => p.value);
-    setRulesString(convertRulesToString(rules, totalPassengers, paxs))
+    setRulesString(convertRulesToString(rules, format))
   },[rules, totalPassengers, passengers])
   
   const handleChangeValue = (event)=> {
@@ -51,13 +51,6 @@ function App() {
     }
   }
   
-  const addRule = () => setPassengers([...passengers,{name: '', min: 0, max: 0}]);
-
-  const removeRule = (idx) => {
-    if(passengers.length > 1){
-      setPassengers([...passengers.filter((item,index)=> index !== idx)])
-    }
-  } 
   return (
     <div className="flex mx-auto w-screen h-screen">
       {/* sidebar */}

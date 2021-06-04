@@ -16,7 +16,6 @@ const PaxSelector = ({
       value={selectedValue}
       onChange={handleChange}
     >
-      <option value="" />
       {passengers.map((p, i)=>(
         <option key={i} value={p.value}>{p.label}</option>
       ))}

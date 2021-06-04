@@ -69,11 +69,8 @@ export const convertRulesToString = (rules =[], format = RULE_DEFAULT_FORMAT) =>
       case RULE_DEFAULT_FORMAT:
         result = arrrayRules
           .map(r => JSON.stringify(r))
-          .join(',\n');
-        return `{
-          "and":[
-            ${result}
-          ]}`;
+          .join(',\n ');
+        return `{\n"and":[\n ${result}\n]}`;
       case RULE_COMPACT_FORMAT:
         result = {
           and: [...arrrayRules]

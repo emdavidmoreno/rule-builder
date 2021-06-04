@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { UnControlled as CodeMirror } from "react-codemirror2";
 import "codemirror/mode/jsx/jsx";
 import "codemirror/lib/codemirror.css";
@@ -14,7 +14,6 @@ const options = {
 
 const RuleEditor = ({
   value = null,
-  handleChange = ()=> {}
 }) => {
   return (
     <div className="flex flex-col flex-wrap relative mt-5 w-full h-full">
@@ -22,9 +21,6 @@ const RuleEditor = ({
         value={value}
         options={options}
         autoCursor={false}
-        onChange={(editor, data, value) => {
-          handleChange(value);
-        }}
     />
 </div>
   );

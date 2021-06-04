@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SUM_PAX_VS_PAX_RULE, PAX_VS_PAX_RULE, RANGE_RULE, SIMPLE_RULE, SUM_PAX_VS_NUMBER_RULE, SUM_PAX_VS_SUM_PAX_RULE, PAX_VS_PAX_MULTIPLY_RULE } from '../constants';
+import { SUM_PAX_VS_PAX_RULE, PAX_VS_PAX_RULE, RANGE_RULE, SIMPLE_RULE, SUM_PAX_VS_NUMBER_RULE, SUM_PAX_VS_SUM_PAX_RULE, PAX_VS_PAX_MULTIPLY_RULE, GREATER_THAN_OR_EQUAL_TO, DOUBLE_EQUAL_TO } from '../constants';
 import { useRules } from '../context/RuleContext';
 import RangeRuleForm from './form/RangeRuleForm';
 import SimpleRuleForm from './form/SimpleRuleForm';
@@ -22,8 +22,8 @@ const PassengerRulesList = () => {
       case SIMPLE_RULE:
         return setRules([...rules,{
           type: SIMPLE_RULE,
-          pax: '',
-          operator: '',
+          pax: 'age1',
+          operator: GREATER_THAN_OR_EQUAL_TO,
           number: 0,
           isEditing: true,
         }]);
@@ -31,7 +31,7 @@ const PassengerRulesList = () => {
       case RANGE_RULE:
         return setRules([...rules,{
           type: RANGE_RULE,
-          pax: '',
+          pax: 'age1',
           min: 0,
           max: 0,
           isEditing: true,
@@ -40,18 +40,18 @@ const PassengerRulesList = () => {
       case PAX_VS_PAX_RULE:
         return setRules([...rules, {
           type: PAX_VS_PAX_RULE,
-          leftPax: '',
-          operator: '',
-          rightPax: '',
+          leftPax: 'age1',
+          operator: DOUBLE_EQUAL_TO,
+          rightPax: 'age1',
           isEditing: true,
         }]);
 
       case PAX_VS_PAX_MULTIPLY_RULE:
         return setRules([...rules, {
           type: PAX_VS_PAX_MULTIPLY_RULE,
-          leftPax: '',
-          operator: '',
-          rightPax: '',
+          leftPax: 'age1',
+          operator: DOUBLE_EQUAL_TO,
+          rightPax: 'age1',
           multiplier: 1,
           isEditing: true,
         }]);
@@ -59,17 +59,17 @@ const PassengerRulesList = () => {
       case SUM_PAX_VS_PAX_RULE:
         return setRules([...rules, {
           type: SUM_PAX_VS_PAX_RULE,
-          paxs: [],
-          operator: '',
-          pax: '',
+          paxs: ['age1'],
+          operator: DOUBLE_EQUAL_TO,
+          pax: 'age1',
           isEditing: true,
         }]);
       
       case SUM_PAX_VS_NUMBER_RULE:
         return setRules([...rules, {
           type: SUM_PAX_VS_NUMBER_RULE,
-          paxs: [],
-          operator: '',
+          paxs: ['age1'],
+          operator: DOUBLE_EQUAL_TO,
           number: 0,
           isEditing: true,
         }]); 
@@ -77,9 +77,9 @@ const PassengerRulesList = () => {
       case SUM_PAX_VS_SUM_PAX_RULE:
           return setRules([...rules, {
             type: SUM_PAX_VS_SUM_PAX_RULE,
-            leftPaxs: [],
-            comparison: '',
-            rightPaxs: [],
+            leftPaxs: ['age1'],
+            comparison: DOUBLE_EQUAL_TO,
+            rightPaxs: ['age1'],
             isEditing: true,
           }]); 
   
