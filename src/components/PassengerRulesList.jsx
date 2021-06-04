@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { PAX_VS_NUMBER_RULE, PAX_VS_PAX_RULE, RANGE_RULE, SIMPLE_RULE, SUM_PAX_VS_NUMBER_RULE, SUM_PAX_VS_SUM_PAX_RULE, TOTAL_RULE } from '../constants';
 import { useRules } from '../context/RuleContext';
 import RangeRuleForm from './form/RangeRuleForm';
+import SimpleRuleForm from './form/SimpleRuleForm';
 import DropdownActionButtons from './presentation/DropdownActionButtons';
 import RangeRuleView from './views/RangeRuleView';
+import SimpleRuleView from './views/SimpleRuleView';
+
 
 const PassengerRulesList = () => {
   const {
@@ -75,6 +78,32 @@ const PassengerRulesList = () => {
     }
   }
 
+  const saveRule = (index) => {
+    const newData = [...rules];
+    newData[index].isEditing = false;
+    setRules(newData);
+  }
+
+  const editRule = (index) => {
+    const newData = [...rules];
+    newData[index].isEditing = true;
+    setRules(newData);
+  }
+
+  const removeRule = (index)  => {
+    setRules(rules.filter((f, idx) => index !== idx));
+  }
+
+  const handleChangeRuleValues = (event)=> {
+    event.preventDefault();
+    const {id, name, value} = event.target;
+    if(['pax', 'min', 'max', 'operator', 'number'].includes(name)) {
+      const updatedRules = [...rules]
+      updatedRules[id][name] = value;
+      setRules(updatedRules);
+    }
+  }
+
   return (
     <div>
       <DropdownActionButtons
@@ -112,17 +141,37 @@ const PassengerRulesList = () => {
         {rules.length > 0 && rules.map((r, i) => {
           return (
             <li key={i}>
-              { (r.type === RANGE_RULE && r.isEditing) && <RangeRuleForm />}
+              { (r.type === RANGE_RULE && r.isEditing) && (
+              <RangeRuleForm 
+                {...r} id={i}
+                handleChange={handleChangeRuleValues}
+                handleSave={saveRule} 
+              />
+              )}
               { (r.type === RANGE_RULE && !r.isEditing) && (
                 <RangeRuleView
-                  pax={r.pax}
-                  min={r.min}
-                  max={r.max}
+                  {...r}
+                  id={i}
+                  handleEdit={editRule}
+                  handleRemove={removeRule}
                 />
               )}
-              {(r.type === TOTAL_RULE) && 'total rule view'}
-              {(r.type === SIMPLE_RULE && r.isEditing) && 'simple rule form'}
-              {(r.type === SIMPLE_RULE && !r.isEditing) && 'simple rule view'}
+              {(r.type === SIMPLE_RULE && r.isEditing) && (
+                <SimpleRuleForm
+                  {...r} 
+                  id={i}
+                  handleChange={handleChangeRuleValues}
+                  handleSave={saveRule} 
+                />
+              )}
+              {(r.type === SIMPLE_RULE && !r.isEditing) && (
+                <SimpleRuleView
+                  {...r}
+                  id={i}
+                  handleEdit={editRule}
+                  handleRemove={removeRule}
+                />
+              )}
               {(r.type === PAX_VS_PAX_RULE && r.isEditing) && 'pax vs pax  rule form'}
               {(r.type === PAX_VS_PAX_RULE && !r.isEditing) && 'pax vs pax  rule view'}
 
