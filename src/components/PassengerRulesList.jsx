@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { SUM_PAX_VS_PAX_RULE, PAX_VS_PAX_RULE, RANGE_RULE, SIMPLE_RULE, SUM_PAX_VS_NUMBER_RULE, SUM_PAX_VS_SUM_PAX_RULE, PAX_VS_PAX_MULTIPLY_RULE, GREATER_THAN_OR_EQUAL_TO, DOUBLE_EQUAL_TO } from '../constants';
+import { SUM_PAX_VS_PAX_RULE, PAX_VS_PAX_RULE, RANGE_RULE, SIMPLE_RULE, SUM_PAX_VS_NUMBER_RULE, SUM_PAX_VS_SUM_PAX_RULE, PAX_VS_PAX_MULTIPLY_RULE, GREATER_THAN_OR_EQUAL_TO, DOUBLE_EQUAL_TO, TOTAL_RULE } from '../constants';
 import { useRules } from '../context/RuleContext';
-import RangeRuleForm from './form/RangeRuleForm';
-import SimpleRuleForm from './form/SimpleRuleForm';
+import { RangeRuleForm, SimpleRuleForm } from './form';
+import { SimpleRuleView, RangeRuleView } from './views';
 import DropdownActionButtons from './presentation/DropdownActionButtons';
-import RangeRuleView from './views/RangeRuleView';
-import SimpleRuleView from './views/SimpleRuleView';
 
 
 const PassengerRulesList = () => {
@@ -147,10 +145,11 @@ const PassengerRulesList = () => {
           },
         ]}
       />
-      <ul>
+      <ul className="pt-6">
         {rules.length > 0 && rules.map((r, i) => {
+          if(r.type === TOTAL_RULE) return null;
           return (
-            <li key={i}>
+            <li key={i} className="flex border border-gray-200 rounded-md items-center px-4">
               {(r.type === SIMPLE_RULE && r.isEditing) && (
                 <SimpleRuleForm
                   {...r} 
@@ -168,7 +167,7 @@ const PassengerRulesList = () => {
                 />
               )}
               { (r.type === RANGE_RULE && r.isEditing) && (
-              <RangeRuleForm 
+              <RangeRuleForm
                 {...r} id={i}
                 handleChange={handleChangeRuleValues}
                 handleSave={saveRule} 

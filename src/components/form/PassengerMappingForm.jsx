@@ -50,6 +50,8 @@ const PassengerMappingForm = () => {
   const handleEnableDisablePax = (index) => {
     const updatedformFielData = [...formFielData]
     updatedformFielData[index].isActive = !updatedformFielData[index].isActive;
+    updatedformFielData[index].label = updatedformFielData[index].isActive ?
+      updatedformFielData[index].label : '';
     setFormFielData(updatedformFielData);
   }
   
@@ -86,6 +88,7 @@ const PassengerMappingForm = () => {
                 placeholder="Total passengers" 
                 value={field.label}
                 onChange={(e) => handleChangeLabel(e.target.value, idx)}
+                disabled={!field.isActive}
                 />
             </div>
           

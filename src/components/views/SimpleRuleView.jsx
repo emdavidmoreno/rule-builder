@@ -1,6 +1,6 @@
 import React from 'react';
 import { usePassengers } from '../../context/PassengerContext';
-import { ViewControls } from '../controls';
+import RuleViewerWrapper from './RuleViewerWrapper';
 
 const SimpleRuleView = ({
   id = '',
@@ -13,20 +13,15 @@ const SimpleRuleView = ({
 }) => {
   const {passengers} = usePassengers();
   return (
-    <li id={id} className="flex justify-between text-sm w-full lg:w-3/4">
-      <div className="flex w-full items-center text-lg font-medium">
-      <span > {(passengers.filter(p=> p.value === pax))[0].label || ''}</span>
-        <span>{operator}</span>
-        <span>{number}</span>
-      </div>
-      <div className="flex w-full">
-        <ViewControls
-          id={id}
-          handleEdit={handleEdit}
-          handleRemove={handleRemove}
-        />
-      </div>
-    </li>
+    <RuleViewerWrapper
+      id={id}
+      handleEdit={handleEdit}
+      handleRemove={handleRemove}
+    >
+      <span className="text-md font-bold mr-1"> {(passengers.filter(p=> p.value === pax))[0].label || ''}</span>
+      <span className="text-xs font-normal mx-1">{operator}</span>
+      <span className="text-md font-bold mr-1">{number}</span>
+    </RuleViewerWrapper>
   );
 };
 

@@ -8,7 +8,7 @@ const ViewControls = ({
   return (
     <div>
       <button 
-          className="inline-block p-3 text-center text-blue-500 border bg-white transition border-blue-500 rounded-full shadow ripple hover:shadow-lg hover:border-blue-600 hover:text-bllue-600 focus:outline-none waves-effect mx-1"
+          className="inline-block p-2 text-center text-blue-500 border bg-white transition border-blue-500 rounded-full shadow ripple hover:shadow-lg hover:border-blue-600 hover:text-bllue-600 focus:outline-none waves-effect mx-1"
           onClick={() => handleEdit(id)}
         >
           <svg className="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 477.873 477.873">
@@ -18,7 +18,7 @@ const ViewControls = ({
           </svg>
         </button>
         <button 
-          className="inline-block p-3 text-center text-white transition bg-red-500 rounded-full shadow ripple hover:shadow-lg hover:bg-red-600 focus:outline-none waves-effect mx-1"
+          className="inline-block p-2 text-center text-white transition bg-red-500 rounded-full shadow ripple hover:shadow-lg hover:bg-red-600 focus:outline-none waves-effect mx-1"
           onClick={() => handleRemove(id)}
         >
           <svg className="w-4 h-4 text-white fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
