@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import PassengerForm from './components/PassengerForm';
 import RuleEditor from './components/presentation/RuleEditor';
-import rulesSTR, { convertRulesToString } from './helpers/getRuleFromPassengerConfig';
+import  { convertRulesToString } from './helpers/getRuleFromPassenger';
 import { usePassengers } from './context/PassengerContext';
 import { useNavigation } from './context/NavigationContext';
 import MultiStepForm from './components/form/MultiStepForm';

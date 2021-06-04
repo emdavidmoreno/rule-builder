@@ -5,9 +5,11 @@ export const RANGE_RULE = 'RANGE_RULE';
 export const SIMPLE_RULE = 'SIMPLE_RULE';
 export const TOTAL_RULE = 'TOTAL_RULE';
 export const PAX_VS_PAX_RULE = 'PAX_VS_PAX_RULE';
+export const PAX_VS_PAX_MULTIPLY_RULE = 'PAX_VS_PAX_MULTIPLY_RULE';
 export const SUM_PAX_VS_PAX_RULE = 'SUM_PAX_VS_PAX_RULE';
 export const SUM_PAX_VS_NUMBER_RULE = 'SUM_PAX_VS_NUMBER_RULE';
 export const SUM_PAX_VS_SUM_PAX_RULE = 'SUM_PAX_VS_SUM_PAX_RULE';
+
 
 /**
  * Operator constants

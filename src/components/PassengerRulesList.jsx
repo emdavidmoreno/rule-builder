@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SUM_PAX_VS_PAX_RULE, PAX_VS_PAX_RULE, RANGE_RULE, SIMPLE_RULE, SUM_PAX_VS_NUMBER_RULE, SUM_PAX_VS_SUM_PAX_RULE } from '../constants';
+import { SUM_PAX_VS_PAX_RULE, PAX_VS_PAX_RULE, RANGE_RULE, SIMPLE_RULE, SUM_PAX_VS_NUMBER_RULE, SUM_PAX_VS_SUM_PAX_RULE, PAX_VS_PAX_MULTIPLY_RULE } from '../constants';
 import { useRules } from '../context/RuleContext';
 import RangeRuleForm from './form/RangeRuleForm';
 import SimpleRuleForm from './form/SimpleRuleForm';
@@ -23,7 +23,7 @@ const PassengerRulesList = () => {
         return setRules([...rules,{
           type: SIMPLE_RULE,
           pax: '',
-          comparison: '',
+          operator: '',
           number: 0,
           isEditing: true,
         }]);
@@ -41,8 +41,18 @@ const PassengerRulesList = () => {
         return setRules([...rules, {
           type: PAX_VS_PAX_RULE,
           leftPax: '',
-          comparison: '',
+          operator: '',
           rightPax: '',
+          isEditing: true,
+        }]);
+
+      case PAX_VS_PAX_MULTIPLY_RULE:
+        return setRules([...rules, {
+          type: PAX_VS_PAX_MULTIPLY_RULE,
+          leftPax: '',
+          operator: '',
+          rightPax: '',
+          multiplier: 1,
           isEditing: true,
         }]);
 
@@ -50,7 +60,7 @@ const PassengerRulesList = () => {
         return setRules([...rules, {
           type: SUM_PAX_VS_PAX_RULE,
           paxs: [],
-          comparison: '',
+          operator: '',
           pax: '',
           isEditing: true,
         }]);
@@ -59,7 +69,7 @@ const PassengerRulesList = () => {
         return setRules([...rules, {
           type: SUM_PAX_VS_NUMBER_RULE,
           paxs: [],
-          comparison: '',
+          operator: '',
           number: 0,
           isEditing: true,
         }]); 
