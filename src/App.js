@@ -24,9 +24,9 @@ function App() {
 
   const [rulesString, setRulesString] = useState(null);
   
-  useEffect(()=>{
-    setRulesString(rulesSTR(totalPassengers, passengers));
-  },[totalPassengers, passengers])
+  // useEffect(()=>{
+  //   //setRulesString(rulesSTR(totalPassengers, passengers));
+  // },[totalPassengers, passengers])
   
   const handleChangeValue = (event)=> {
     event.preventDefault();
