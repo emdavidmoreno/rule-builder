@@ -1,6 +1,6 @@
 import React from 'react';
-import PaxSelector from '../controls/PaxSelector';
-import FormControls from '../controls/FormControls';
+import { FormControls, PaxSelector } from '../controls';
+
 
 const RangeRuleForm = ({
   id = '',

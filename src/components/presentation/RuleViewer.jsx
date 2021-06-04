@@ -1,8 +1,9 @@
 import React from 'react';
-import { UnControlled as CodeMirror } from "react-codemirror2";
+import { Controlled as CodeMirror } from "react-codemirror2";
 import "codemirror/mode/jsx/jsx";
 import "codemirror/lib/codemirror.css";
 import "codemirror/theme/lucario.css";
+import { useRuleFormat } from '../../context/RuleFormatContext';
 
 
 const options = {
@@ -12,18 +13,19 @@ const options = {
     lineWrapping: true,
 }; 
 
-const RuleEditor = ({
+const RuleViewer = ({
   value = null,
 }) => {
+  const {format, setFormat,  rulesString} = useRuleFormat()
   return (
     <div className="flex flex-col flex-wrap relative mt-5 w-full h-full">
-    <CodeMirror
-        value={value}
-        options={options}
-        autoCursor={false}
-    />
-</div>
+      <CodeMirror
+          value={rulesString}
+          options={options}
+          autoCursor={false}
+      />
+    </div>
   );
 };
 
-export default RuleEditor;
+export default RuleViewer;

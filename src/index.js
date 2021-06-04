@@ -6,13 +6,17 @@ import reportWebVitals from './reportWebVitals';
 import { PassengerProvider } from './context/PassengerContext';
 import { NavigationProvider } from './context/NavigationContext';
 import { RuleProvider } from './context/RuleContext';
+import { RuleFormatProvider } from './context/RuleFormatContext';
+
 
 ReactDOM.render(
   <React.StrictMode>
     <PassengerProvider>
       <NavigationProvider>
         <RuleProvider>
-          <App />
+          <RuleFormatProvider>
+            <App />
+          </RuleFormatProvider>
         </RuleProvider>
       </NavigationProvider>
     </PassengerProvider>

@@ -1,7 +1,5 @@
 import React from 'react';
-import PaxSelector from '../controls/PaxSelector';
-import FormControls from '../controls/FormControls';
-import OperatorSelector from '../controls/OperatorSelector';
+import { FormControls, PaxSelector, OperatorSelector } from '../controls';
 
 const SimpleRuleForm = ({
   id='',

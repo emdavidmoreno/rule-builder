@@ -1,6 +1,7 @@
 import React from 'react';
 import { usePassengers } from '../../context/PassengerContext';
-import ViewControls from '../controls/ViewControls';
+import { ViewControls } from '../controls';
+
 
 const RangeRuleView = ({
   id = '',
