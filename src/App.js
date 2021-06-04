@@ -3,13 +3,15 @@ import logo from './logo.svg';
 import './App.css';
 import PassengerForm from './components/PassengerForm';
 import RuleEditor from './components/presentation/RuleEditor';
-import rulesSTR from './helpers/getRuleFromPassengerConfig';
+import rulesSTR, { convertRulesToString } from './helpers/getRuleFromPassengerConfig';
 import { usePassengers } from './context/PassengerContext';
 import { useNavigation } from './context/NavigationContext';
 import MultiStepForm from './components/form/MultiStepForm';
 import TotalPassengerForm from './components/form/TotalPassengerForm';
 import PassengerMappingForm from './components/form/PassengerMappingForm';
 import PassengerRulesList from './components/PassengerRulesList';
+import { useRules } from './context/RuleContext';
+import { RULE_DEFAULT_FORMAT, TOTAL_RULE } from './constants';
 
 function App() {
 
@@ -20,13 +22,17 @@ function App() {
     setPassengers,
   } = usePassengers();
 
+  const {rules, setRules} = useRules();
+
   const {current} = useNavigation();
 
   const [rulesString, setRulesString] = useState(null);
+  const [format, setFormat] = useState(RULE_DEFAULT_FORMAT); // to change rule string format
   
-  // useEffect(()=>{
-  //   //setRulesString(rulesSTR(totalPassengers, passengers));
-  // },[totalPassengers, passengers])
+  useEffect(()=>{
+    const paxs = passengers.map(p => p.value);
+    setRulesString(convertRulesToString(rules, totalPassengers, paxs))
+  },[rules, totalPassengers, passengers])
   
   const handleChangeValue = (event)=> {
     event.preventDefault();
@@ -38,6 +44,13 @@ function App() {
     }
     if(['totalPassengers'].includes(name)){
       setTotalPassengers(value)
+      setRules(rules.map(rule=>{
+        return rule.type !== TOTAL_RULE ? rule
+          : {
+            ...rule,
+            total: value,
+          }
+      }))
     }
   }
   
@@ -74,35 +87,6 @@ function App() {
                     handleChange={handleChangeValue}
                   />
                   <PassengerRulesList />
-                </>
-              )}
-
-              {current === 3 && (
-                <span>maybe remove this</span>
-              )}
-
-              {current === 4 && (
-                <>
-                  'Show the result in the editor and save'
-                  <div className="flex justify-start w-max my-4 mx-8">
-                    <button 
-                      className='w-auto bg-blue-500 hover:bg-bllue-700 rounded-md shadow-md font-medium text-white px-4 py-2'
-                      onClick={addRule}
-                    >
-                      Add passenger
-                    </button>
-                  </div>
-                  {passengers.map((passenger, idx) => (
-                    <PassengerForm
-                      key={idx}
-                      id={idx}
-                      name={passenger.name || ''}
-                      min={passenger.min || 0}
-                      max={passenger.max || 0}
-                      handleChange={handleChangeValue}
-                      handleRemove={removeRule}
-                    />
-                  ))}
                 </>
               )}
 

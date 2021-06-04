@@ -21,4 +21,12 @@ export const DOUBLE_EQUAL_TO = '==';
 export const ADDITION = '+';
 export const EQUAL_TO = '=';
 
+/**
+ * Rules format
+ */
+
+export const RULE_DEFAULT_FORMAT = 'default';
+export const RULE_COMPAT_FORMAT = 'compact';
+export const RULE_EXTENDED_FORMAT = 'extended';
+
 
