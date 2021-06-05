@@ -11,6 +11,10 @@ const RangeRuleForm = ({
   handleChange = () => {},
   handleSave = ()=> {},
 }) => {
+
+  const onChange = e => {
+    handleChange(e)
+  }
   
   return (
     <RuleFormWrapper
@@ -21,7 +25,7 @@ const RangeRuleForm = ({
           id={id}
           name={'pax'}
           selectedValue={pax}
-          handleChange={handleChange}
+          handleChange={onChange}
         />
         <input 
           id={id}

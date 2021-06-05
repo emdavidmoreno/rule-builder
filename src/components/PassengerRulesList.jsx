@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { SUM_PAX_VS_PAX_RULE, PAX_VS_PAX_RULE, RANGE_RULE, SIMPLE_RULE, SUM_PAX_VS_NUMBER_RULE, SUM_PAX_VS_SUM_PAX_RULE, PAX_VS_PAX_MULTIPLY_RULE, GREATER_THAN_OR_EQUAL_TO, DOUBLE_EQUAL_TO, TOTAL_RULE } from '../constants';
 import { useRules } from '../context/RuleContext';
-import { RangeRuleForm, SimpleRuleForm } from './form';
-import { SimpleRuleView, RangeRuleView } from './views';
+import { PaxVsPaxRuleForm, RangeRuleForm, SimpleRuleForm } from './form';
+import { SimpleRuleView, RangeRuleView, PaxVsPaxRuleView } from './views';
 import DropdownActionButtons from './presentation/DropdownActionButtons';
 
 
@@ -105,7 +105,7 @@ const PassengerRulesList = () => {
   const handleChangeRuleValues = (event)=> {
     event.preventDefault();
     const {id, name, value} = event.target;
-    if(['pax', 'min', 'max', 'operator', 'number'].includes(name)) {
+    if(['pax', 'leftPax', 'rightPax', 'min', 'max', 'operator', 'number'].includes(name)) {
       const updatedRules = [...rules]
       updatedRules[id][name] = value;
       setRules(updatedRules);
@@ -181,8 +181,21 @@ const PassengerRulesList = () => {
                   handleRemove={removeRule}
                 />
               )}
-              {(r.type === PAX_VS_PAX_RULE && r.isEditing) && 'pax vs pax  rule form'}
-              {(r.type === PAX_VS_PAX_RULE && !r.isEditing) && 'pax vs pax  rule view'}
+              {(r.type === PAX_VS_PAX_RULE && r.isEditing) && (
+                <PaxVsPaxRuleForm
+                  {...r} id={i}
+                  handleChange={handleChangeRuleValues}
+                  handleSave={saveRule} 
+                />
+              )}
+              {(r.type === PAX_VS_PAX_RULE && !r.isEditing) && (
+                <PaxVsPaxRuleView
+                  {...r}
+                  id={i}
+                  handleEdit={editRule}
+                  handleRemove={removeRule}
+                />
+              )}
 
               {(r.type === SUM_PAX_VS_PAX_RULE && r.isEditing) && 'sum pax vs pax  rule form'}
               {(r.type === SUM_PAX_VS_PAX_RULE && !r.isEditing) && 'sum pax vs pax  rule view'}

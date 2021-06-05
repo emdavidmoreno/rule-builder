@@ -75,7 +75,7 @@ const PassengerMappingForm = () => {
                   onChange={()=> handleEnableDisablePax(idx)}
                   disabled={idx === 0}
                 />
-                <label className="inline-block align-middle ml-1" htmlFor="remember">{` Passenger${idx + 1}`}</label>
+                <label className="inline-block align-middle ml-1" htmlFor={idx}>{` Passenger${idx + 1}`}</label>
               </div>
             </div>
             <div className="flex flex-col items-start">
