@@ -35,8 +35,8 @@ const OperatorSelector = ({
       id={id}
       name={name}
       options={options}
-      value={selectedValue}
-      onChange={handleChange}
+      selectedValue={selectedValue}
+      handleChange={handleChange}
     />
   );
 };

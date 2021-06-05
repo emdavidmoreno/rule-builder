@@ -14,9 +14,9 @@ const PaxSelector = ({
     <BaseSelector
       id={id}
       name={name}
-      value={selectedValue}
+      selectedValue={selectedValue}
       options={passengers}
-      onChange={handleChange}
+      handleChange={handleChange}
     />
   );
 };
