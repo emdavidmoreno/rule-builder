@@ -1,24 +1,42 @@
-import React from 'react';
+import Select from 'react-select';
 
 const BaseSelector = ({
   id = '',
   name = '',
   selectedValue = '',
   options = [],
+  isMultiple = false,
   handleChange = () => {},
 }) => {
+  const getOptionLabel = (option) => option.label;
+  const getOptionValue = (option) => option.value;
+  const onSelectChange = (option) => {
+    const value = 
+      isMultiple ? option.map(o => o.value) : option.value;
+    handleChange(id, name, value)
+  };
+  let value;
+  if(isMultiple) {
+    const selectedMapped = new Map(selectedValue.map(s => [s, s]));
+    value = options.filter(opt => selectedMapped.has(opt.value));
+  }
+  else {
+    value =  options.find(option => option.value === selectedValue)
+  }
+  
   return (
-    <select 
-      id={id}
-      name={name}
-      className=" flex w-full mr-1 py-1 px-3 rounded-md border-2 border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" 
-      value={selectedValue}
-      onChange={handleChange}
-    >
-      {options.map((opt, idx) => (
-        <option key={idx}  value={opt.value}>{opt.label}</option>
-      ))}
-    </select>
+    <div className="relative w-full h-auto">
+      <Select
+        id={id}
+        name={name}
+        value={value}
+        options={options}
+        getOptionLabel={getOptionLabel}
+        getOptionValue={getOptionValue}
+        onChange={onSelectChange}
+        isMulti={isMultiple}
+      />
+    </div>
   );
 };
 

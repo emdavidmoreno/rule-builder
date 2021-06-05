@@ -6,10 +6,10 @@ const PaxSelector = ({
   id = '',
   name = '',
   selectedValue = '',
+  isMultiple = false,
   handleChange = () => {},
 }) => {
   const {passengers = []} = usePassengers();
-
   return(
     <BaseSelector
       id={id}
@@ -17,6 +17,7 @@ const PaxSelector = ({
       selectedValue={selectedValue}
       options={passengers}
       handleChange={handleChange}
+      isMultiple={isMultiple}
     />
   );
 };
