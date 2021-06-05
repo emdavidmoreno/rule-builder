@@ -13,7 +13,7 @@ const BaseSelector = ({
   const onSelectChange = (option) => {
     const value = 
       isMultiple ? option.map(o => o.value) : option.value;
-    handleChange(id, name, value)
+    handleChange(value, id, name)
   };
   let value;
   if(isMultiple) {

@@ -14,7 +14,7 @@ const NumberSelector = ({
     type="number" 
     placeholder="Number"
     value={value}
-    onChange={(e) => handleChange(id, name , Number(e.target.value))}
+    onChange={(e) => handleChange(Number(e.target.value), id, name)}
   />
   );
 };
