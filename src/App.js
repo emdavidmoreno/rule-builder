@@ -1,45 +1,13 @@
-import { usePassengers } from './context/PassengerContext';
 import { useNavigation } from './context/NavigationContext';
-import MultiStepForm from './components/form/MultiStepForm';
-import TotalPassengerForm from './components/form/TotalPassengerForm';
-import PassengerMappingForm from './components/form/PassengerMappingForm';
+import MultiStepForm from './components/forms/MultiStepForm';
+import TotalPassengerForm from './components/forms/TotalPassengerForm';
+import PassengerMappingForm from './components/forms/PassengerMappingForm';
 import PassengerRulesList from './components/PassengerRulesList';
-import { useRules } from './context/RuleContext';
-import { TOTAL_RULE } from './constants';
 import RuleViewer from './components/presentation/RuleViewer';
 
 function App() {
 
-  const {
-    totalPassengers, 
-    setTotalPassengers,
-    passengers, 
-    setPassengers,
-  } = usePassengers();
-
-  const {rules, setRules} = useRules();
-
   const {current} = useNavigation();
-      
-  const handleChangeValue = (event)=> {
-    event.preventDefault();
-    const {id, name, value} = event.target;
-    if(['name', 'min', 'max'].includes(name)) {
-      const updatedPassengers = [...passengers]
-      updatedPassengers[id][name] = value;
-      setPassengers(updatedPassengers);
-    }
-    if(['totalPassengers'].includes(name)){
-      setTotalPassengers(value)
-      setRules(rules.map(rule=>{
-        return rule.type !== TOTAL_RULE ? rule
-          : {
-            ...rule,
-            total: value,
-          }
-      }))
-    }
-  }
   
   return (
     <div className="flex mx-auto w-screen h-screen">
@@ -62,10 +30,7 @@ function App() {
 
               {current === 2 && (
                 <>
-                  <TotalPassengerForm
-                    value={totalPassengers}
-                    handleChange={handleChangeValue}
-                  />
+                  <TotalPassengerForm />
                   <PassengerRulesList />
                 </>
               )}
