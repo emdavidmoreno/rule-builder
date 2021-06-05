@@ -15,31 +15,31 @@ const initialPassengers = new Array(9).fill(null)
 const PassengerMappingForm = () => {
   const [formFielData, setFormFielData] = useState(initialPassengers);
   const { passengers, setPassengers } = usePassengers();
-  const { rules, setRules } = useRules();
+  const {  rules, setRules, } = useRules();
 
   useEffect(()=>{
-    return ()=> {
-      const paxMap = new Map(passengers.map(p => [p.name, p]));
-      const newPax = formFielData
-        .filter(f => f.isActive)
-        .map(field => {
-          return paxMap.has(field.value) ? 
-          paxMap.get(field.value) : {
-            value: field.value, 
-            label: field.label,
-          }
-        });
-      setPassengers(newPax);
-      setRules(rules.map(rule=>{
-        return rule.type !== TOTAL_RULE ? rule
-          : {
-            ...rule,
-            paxs: newPax.map(p=>p.value),
-          }
-      }))
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    const tempMap = new Map(passengers.map(p => [p.value, p]));
+    const updatedFormFielData = initialPassengers.map(passenger =>({
+      ...passenger, 
+      label: (tempMap.get(passenger.value) || {}).label ||  '',
+      isActive: tempMap.has(passenger.value)
+    }));
+    setFormFielData(updatedFormFielData);
+  },[])
+
+  useEffect(()=>{
+    const updatedPassengers = formFielData
+      .filter(p=> p.isActive)
+      .map(({label, value}) => ({label, value}));
+    setPassengers(updatedPassengers);
+    const newRules = rules.map(rule =>
+      rule.type !== TOTAL_RULE ? rule
+       : ({
+         ...rule,
+         paxs: updatedPassengers.map(p=>p.value)
+       }))
+    setRules(newRules);
+  }, [formFielData]);
 
   const handleChangeLabel = (value, index) => {
     const updatedformFielData = [...formFielData]

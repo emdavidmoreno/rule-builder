@@ -11,10 +11,6 @@ const RangeRuleForm = ({
   handleChange = () => {},
   handleSave = ()=> {},
 }) => {
-
-  const onChange = e => {
-    handleChange(e)
-  }
   
   return (
     <RuleFormWrapper
@@ -25,23 +21,23 @@ const RangeRuleForm = ({
           id={id}
           name={'pax'}
           selectedValue={pax}
-          handleChange={onChange}
+          handleChange={handleChange}
         />
         <input 
           id={id}
           name={'min'}
-          className=" flex w-full mr-1 lg:w-1/4 py-1 px-3 rounded-md border-2 border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" 
+          className=" flex w-full mr-1 py-1 px-3 rounded-md border-2 border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" 
           type="number" placeholder="From"
           value={min}
-          onChange={handleChange}
+          onChange={(e) => handleChange(id, 'min', Number(e.target.value))}
         />
         <input 
           id={id}
           name={'max'}
-          className=" flex w-full mr-1 lg:w-1/4 py-1 px-3 rounded-md border-2 border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" 
+          className=" flex w-full mr-1 py-1 px-3 rounded-md border-2 border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" 
           type="number" placeholder="From"
           value={max}
-          onChange={handleChange}
+          onChange={(e) => handleChange(id, 'max', Number(e.target.value))}
         />
     </RuleFormWrapper>
   );
