@@ -26,7 +26,7 @@ const DropdownActionButtons = ({
         </span>
       </button>
       <ul
-          className={`bg-white rounded-sm shadow-sm overflow-hidden transform scale-${isOpen === true ? '100': '0'} absolute transition duration-150 ease-in-out origin-top w-48`}
+          className={`bg-white rounded-sm shadow-sm overflow-hidden transform scale-${isOpen === true ? '100': '0'} absolute transition duration-150 ease-in-out origin-top w-48 z-10`}
         >
           {actions.map((item, idx) =>(
             <li 
