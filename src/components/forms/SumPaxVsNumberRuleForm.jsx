@@ -32,7 +32,6 @@ const SumPaxVsNumberRuleForm = ({
         name={'number'}
         value={number}
         handleChange={handleChange}
-
       />
     </RuleFormWrapper>
   );
