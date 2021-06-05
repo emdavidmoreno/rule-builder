@@ -1,7 +1,6 @@
 import React from 'react';
 import { LESS_THAN_OR_EQUAL_TO } from '../../constants';
 import { usePassengers } from '../../context/PassengerContext';
-import { ViewControls } from '../controls';
 import RuleViewerWrapper from './RuleViewerWrapper';
 
 
