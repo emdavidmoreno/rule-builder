@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { SUM_PAX_VS_PAX_RULE, PAX_VS_PAX_RULE, RANGE_RULE, SIMPLE_RULE, SUM_PAX_VS_NUMBER_RULE, SUM_PAX_VS_SUM_PAX_RULE, PAX_VS_PAX_MULTIPLY_RULE, GREATER_THAN_OR_EQUAL_TO, DOUBLE_EQUAL_TO, TOTAL_RULE } from '../constants';
 import { useRules } from '../context/RuleContext';
-import { PaxVsPaxRuleForm, RangeRuleForm, SimpleRuleForm } from './form';
-import { SimpleRuleView, RangeRuleView, PaxVsPaxRuleView } from './views';
+import { PaxVsPaxRuleForm, RangeRuleForm, SimpleRuleForm } from './forms';
+import { SimpleRuleView, RangeRuleView, PaxVsPaxRuleView, SumPaxVsNumberRuleView } from './views';
 import DropdownActionButtons from './presentation/DropdownActionButtons';
+import SumPaxVsNumberRuleForm from './forms/SumPaxVsNumberRuleForm';
 
 
 const PassengerRulesList = () => {
@@ -102,14 +103,10 @@ const PassengerRulesList = () => {
     setRules(rules.filter((f, idx) => index !== idx));
   }
 
-  const handleChangeRuleValues = (event)=> {
-    event.preventDefault();
-    const {id, name, value} = event.target;
-    if(['pax', 'leftPax', 'rightPax', 'min', 'max', 'operator', 'number'].includes(name)) {
+  const handleChangeRuleValues = (index, key, value)=> {
       const updatedRules = [...rules]
-      updatedRules[id][name] = value;
+      updatedRules[index][key] = value;
       setRules(updatedRules);
-    }
   }
 
   return (
@@ -200,8 +197,21 @@ const PassengerRulesList = () => {
               {(r.type === SUM_PAX_VS_PAX_RULE && r.isEditing) && 'sum pax vs pax  rule form'}
               {(r.type === SUM_PAX_VS_PAX_RULE && !r.isEditing) && 'sum pax vs pax  rule view'}
 
-              {(r.type === SUM_PAX_VS_NUMBER_RULE && r.isEditing) && 'sum pax vs number  rule form'}
-              {(r.type === SUM_PAX_VS_NUMBER_RULE && !r.isEditing) && 'sum pax vs number  rule view'}
+              {(r.type === SUM_PAX_VS_NUMBER_RULE && r.isEditing) && (
+                <SumPaxVsNumberRuleForm
+                  {...r} id={i}
+                  handleChange={handleChangeRuleValues}
+                  handleSave={saveRule} 
+                />
+              )}
+              {(r.type === SUM_PAX_VS_NUMBER_RULE && !r.isEditing) && (
+                <SumPaxVsNumberRuleView
+                  {...r}
+                  id={i}
+                  handleEdit={editRule}
+                  handleRemove={removeRule}
+                />
+              )}
 
               {(r.type === SUM_PAX_VS_SUM_PAX_RULE && r.isEditing) && 'sum pax vs sum pax rule form'}
               {(r.type === SUM_PAX_VS_SUM_PAX_RULE && !r.isEditing) && 'sum pax vs sum pax rule view'}
@@ -213,4 +223,4 @@ const PassengerRulesList = () => {
   );
 };
 
-export default PassengerRulesList;
+export default memo(PassengerRulesList);
