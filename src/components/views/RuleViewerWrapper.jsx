@@ -8,7 +8,7 @@ const RuleViewerWrapper = ({
   handleRemove = () => {}
 }) => {
   return (
-    <div className="flex justify-between items-center w-full">
+    <div className="flex justify-between items-center w-full py-1">
     <div className="flex items-center">
      {children}
     </div>
