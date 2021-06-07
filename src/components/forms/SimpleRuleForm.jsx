@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { PaxSelector, OperatorSelector } from '../controls';
+import { PaxSelector, OperatorSelector, NumberSelector } from '../controls';
 import RuleFormWrapper from './RuleFormWrapper';
 
 const SimpleRuleForm = ({
@@ -28,14 +28,11 @@ const SimpleRuleForm = ({
         selectedValue={operator}
         handleChange={handleChange}
       />
-      <input 
+      <NumberSelector
         id={id}
         name={'number'}
-        className=" flex w-full mr-1 py-1 px-3 rounded-md border-2 border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" 
-        type="number" 
-        placeholder="Number"
         value={number}
-        onChange={(e) => handleChange(id, 'number', Number(e.target.value))}
+        handleChange={handleChange}
       />
     </RuleFormWrapper>
   );

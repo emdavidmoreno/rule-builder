@@ -1,5 +1,5 @@
 import React from 'react';
-import { PaxSelector } from '../controls';
+import { NumberSelector, PaxSelector } from '../controls';
 import RuleFormWrapper from './RuleFormWrapper';
 
 
@@ -23,21 +23,17 @@ const RangeRuleForm = ({
           selectedValue={pax}
           handleChange={handleChange}
         />
-        <input 
+        <NumberSelector
           id={id}
           name={'min'}
-          className=" flex w-full mr-1 py-1 px-3 rounded-md border-2 border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" 
-          type="number" placeholder="From"
           value={min}
-          onChange={(e) => handleChange(id, 'min', Number(e.target.value))}
+          handleChange={handleChange}
         />
-        <input 
+        <NumberSelector
           id={id}
           name={'max'}
-          className=" flex w-full mr-1 py-1 px-3 rounded-md border-2 border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" 
-          type="number" placeholder="From"
           value={max}
-          onChange={(e) => handleChange(id, 'max', Number(e.target.value))}
+          handleChange={handleChange}
         />
     </RuleFormWrapper>
   );
