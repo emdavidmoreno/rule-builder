@@ -1,3 +1,4 @@
+export { default as Copy } from './Copy';
 export { default as FormControls } from './FormControls';
 export { default as ViewControls } from './ViewControls';
 export { default as OperatorSelector } from './selectors/OperatorSelector';

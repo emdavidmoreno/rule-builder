@@ -4,7 +4,7 @@ import "codemirror/mode/jsx/jsx";
 import "codemirror/lib/codemirror.css";
 import "codemirror/theme/lucario.css";
 import { useRuleFormat } from '../../context/RuleFormatContext';
-import { FormatSelector } from '../controls';
+import { FormatSelector, Copy } from '../controls';
 
 
 const options = {
@@ -29,11 +29,14 @@ const RuleViewer = ({
           handleChange={handleChangeFormat}
         />
       </div>
-      <CodeMirror
-          value={rulesString}
-          options={options}
-          autoCursor={false}
-      />
+      <div className="relative">
+        <Copy />  
+        <CodeMirror
+            value={rulesString}
+            options={options}
+            autoCursor={false}
+        />
+      </div>
     </div>
   );
 };
