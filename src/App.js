@@ -21,12 +21,6 @@ function App() {
         <h2 className="text-blue-800 text-left font-bold text-2xl uppercase mt-3 flex items-center leading-none">
           Passenger rules Playground
         </h2>
-
-        <div className="container mx-auto my-4">
-          <div className="flex mx-auto w-full max-w-sm">
-            <TravelerSelector />
-          </div>
-        </div>
         <div className="flex flex-row items-center items-stretch space-x-1">
           {/* basic rules form */}
           <div className="flex flex-col justify-center w-full lg:max-w-1/2 border rounded-md shadow-md border-gray-200 py-4 h-auto">
@@ -47,6 +41,9 @@ function App() {
 
           {/* custom rules editor */}
           <div className="flex flex-col justify-center w-full lg:max-w-1/2 border rounded-md shadow-md border-gray-200 py-4 px-4">
+            <div className="flex mx-auto w-full max-w-sm">
+              <TravelerSelector />
+            </div>
             <RuleViewer />
           </div>
         </div>
