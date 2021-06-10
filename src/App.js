@@ -28,7 +28,7 @@ function App() {
 
         {/* content */}
         <div className="container mx-auto">
-          <h2 className="text-left text-blue-800 font-bold text-2xl uppercase mt-3 flex items-center leading-none">
+          <h2 className="text-left text-blue-800 font-bold text-2xl uppercase mt-3 flex items-center leading-none pb-4">
             Passenger rules Playground
           </h2>
           <div className="flex flex-row items-center items-stretch space-x-1">

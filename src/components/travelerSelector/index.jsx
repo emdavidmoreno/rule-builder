@@ -35,11 +35,13 @@ const TravelerSelector = () => {
   const {rules} = useRules();
 
   useEffect(()=>{
-    setTravelers(passengers.map(passenger =>({
+    const psngrs = passengers.map(passenger =>({
       label: passenger.label,
       key: passenger.value,
       value: 0
-    })))
+    }));
+    psngrs[0].value = 1;
+    setTravelers(psngrs)
   },[passengers, rules])
   
   const handleChange = (value, index) => {
