@@ -11,14 +11,14 @@ const SimpleRuleView = ({
   handleRemove = () => {},
 
 }) => {
-  const {passengers} = usePassengers();
+  const {activePassengers} = usePassengers();
   return (
     <RuleViewerWrapper
       id={id}
       handleEdit={handleEdit}
       handleRemove={handleRemove}
     >
-      <span className="text-md font-bold mr-1"> {(passengers.filter(p=> p.value === pax))[0].label || ''}</span>
+      <span className="text-md font-bold mr-1"> {(activePassengers.filter(p=> p.key === pax))[0].label || ''}</span>
       <span className="text-xs font-normal mx-1">{operator}</span>
       <span className="text-md font-bold mr-1">{number}</span>
     </RuleViewerWrapper>

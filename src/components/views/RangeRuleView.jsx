@@ -12,7 +12,7 @@ const RangeRuleView = ({
   handleEdit = () => {},
   handleRemove = () => {},
 }) => {
-  const {passengers} = usePassengers();
+  const {activePassengers} = usePassengers();
   return (
     <RuleViewerWrapper
       id={id}
@@ -21,7 +21,7 @@ const RangeRuleView = ({
     >
        <span className="text-md font-bold mr-1">{min}</span>
         <span className="text-xs font-normal mx-1">{LESS_THAN_OR_EQUAL_TO}</span>
-        <span className="text-md font-bold mr-1"> {(passengers.filter(p=> p.value === pax))[0].label || ''}</span>
+        <span className="text-md font-bold mr-1"> {(activePassengers.filter(p=> p.key === pax))[0].label || ''}</span>
         <span className="text-xs font-normal mx-1">{LESS_THAN_OR_EQUAL_TO}</span>
         <span className="text-md font-bold mr-1">{max}</span>
     </RuleViewerWrapper>

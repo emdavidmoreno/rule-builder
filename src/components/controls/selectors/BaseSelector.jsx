@@ -15,25 +15,17 @@ const BaseSelector = ({
       isMultiple ? option.map(o => o.value) : option.value;
     handleChange(value, id, name)
   };
-  let value;
-  if(isMultiple) {
-    const selectedMapped = new Map(selectedValue.map(s => [s, s]));
-    value = options.filter(opt => selectedMapped.has(opt.value));
-  }
-  else {
-    value =  options.find(option => option.value === selectedValue)
-  }
   
   return (
     <div className="relative w-full h-auto">
       <Select
         id={id}
         name={name}
-        value={value}
+        value={selectedValue}
         options={options}
         getOptionLabel={getOptionLabel}
         getOptionValue={getOptionValue}
-        onChange={onSelectChange}
+        onChange={handleChange}
         isMulti={isMultiple}
       />
     </div>

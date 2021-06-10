@@ -10,7 +10,7 @@ const PaxVsPaxRuleView = ({
   handleEdit = () => {},
   handleRemove = () => {},
 }) => {
-  const {passengers} = usePassengers();
+  const {activePassengers} = usePassengers();
 
   return (
     <RuleViewerWrapper
@@ -18,9 +18,9 @@ const PaxVsPaxRuleView = ({
       handleEdit={handleEdit}
       handleRemove={handleRemove}
     >
-      <span className="text-md font-bold mr-1"> {(passengers.filter(p=> p.value === leftPax))[0].label || ''}</span>
+      <span className="text-md font-bold mr-1"> {(activePassengers.filter(p=> p.key === leftPax))[0].label || ''}</span>
       <span className="text-xs font-normal mx-1">{operator}</span>
-      <span className="text-md font-bold mr-1"> {(passengers.filter(p=> p.value === rightPax))[0].label || ''}</span>
+      <span className="text-md font-bold mr-1"> {(activePassengers.filter(p=> p.key === rightPax))[0].label || ''}</span>
       
     </RuleViewerWrapper>
   );

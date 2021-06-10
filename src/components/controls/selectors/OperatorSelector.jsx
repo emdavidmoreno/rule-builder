@@ -30,13 +30,17 @@ const OperatorSelector = ({
       value: LESS_THAN_OR_EQUAL_TO,
     },
   ];
+  const selectedOption = options.find(option => option.value === selectedValue);
+  const onSelectChange = (option) => {
+    handleChange(option.value, id, name)
+  }
   return (
     <BaseSelector
       id={id}
       name={name}
       options={options}
-      selectedValue={selectedValue}
-      handleChange={handleChange}
+      selectedValue={selectedOption}
+      handleChange={onSelectChange}
     />
   );
 };

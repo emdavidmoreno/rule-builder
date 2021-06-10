@@ -30,37 +30,37 @@ const TravelerOption = ({ id, handleChange, value = 0, label = '' }) => {
 }
 
 const TravelerSelector = () => {
-  const {passengers} = usePassengers();
+  const {passengers, setPassengers} = usePassengers();
   const [travelers, setTravelers] = useState([]);
   const {rules} = useRules();
 
   useEffect(()=>{
-    const psngrs = passengers.map(passenger =>({
+    setTravelers(passengers.map((passenger, index) =>({
       label: passenger.label,
       key: passenger.value,
-      value: 0
-    }));
-    psngrs[0].value = 1;
-    setTravelers(psngrs)
+      value: index === 0 ? 1 : 0
+    })))
   },[passengers, rules])
   
   const handleChange = (value, index) => {
     if(value < 0) return;
-    const newTravelers = travelers
-      .map((traveler, idx) =>{
-        return idx === index ? 
-          {...traveler, value} : traveler;
-      })
-    const isValid = evaluateRules(rules, newTravelers)
+    const updatedPassengers = passengers
+      .filter(p => p.isActive)
+      .map((passenger, idx) =>({
+        ...passenger,
+        value: index === idx ? value : passenger.value,
+      }))
+    
+    const isValid = evaluateRules(rules, updatedPassengers)
     if(isValid) {
-      setTravelers(newTravelers);
+      setPassengers(updatedPassengers);
     }
   };
 
   return (
     <div className="w-full mx-auto border border-gray-100 bg-white rounded-xl py-6 px-0 shadow-md overflow-hidden">
       <h1 className="mx-8 pb-6 font-bold text-blue-800 flex-1 uppercase">Passengers</h1>
-      {travelers.map((item, id) => (
+      {passengers.filter(p => p.isActive).map((item, id) => (
         <TravelerOption
           key={id}
           id={id}

@@ -11,8 +11,8 @@ const SumPaxVsPaxRuleView = ({
   handleRemove = () => {},
 
 }) => {
-  const {passengers} = usePassengers();
-  const passengersMap = new Map(passengers.map(p => [p.value, p]))
+  const {activePassengers} = usePassengers();
+  const passengersMap = new Map(activePassengers.map(p => [p.key, p]))
   const paxLabels = paxs.map(v => passengersMap.get(v).label);
   return (
     <RuleViewerWrapper
@@ -22,7 +22,7 @@ const SumPaxVsPaxRuleView = ({
     >
       <span className="text-md font-bold mr-1"> Sum[ {paxLabels.join(',')} ]</span>
       <span className="text-xs font-normal mx-1">{operator}</span>
-      <span className="text-md font-bold mr-1">{(passengers.filter(p=> p.value === pax))[0].label || ''}</span>
+      <span className="text-md font-bold mr-1">{(activePassengers.filter(p=> p.key === pax))[0].label || ''}</span>
     </RuleViewerWrapper>
   );
 };

@@ -10,8 +10,8 @@ const SumPaxVsNumberRuleView = ({
   handleRemove = () => {},
 
 }) => {
-  const {passengers} = usePassengers();
-  const passengersMap = new Map(passengers.map(p => [p.value, p]))
+  const {activePassengers} = usePassengers();
+  const passengersMap = new Map(activePassengers.map(p => [p.key, p]))
   const paxLabels = paxs.map(v => passengersMap.get(v).label);
   return (
     <RuleViewerWrapper

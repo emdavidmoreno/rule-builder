@@ -13,53 +13,38 @@ const initialPassengers = new Array(9).fill(null)
   initialPassengers[0].label = 'Adults';
 
 const PassengerMappingForm = () => {
-  const [formFielData, setFormFielData] = useState(initialPassengers);
-  const { passengers, setPassengers } = usePassengers();
+  const { passengers, activePassengers, setPassengers } = usePassengers();
   const {  rules, setRules, } = useRules();
-
+  
   useEffect(()=>{
-    const tempMap = new Map(passengers.map(p => [p.value, p]));
-    const updatedFormFielData = initialPassengers.map(passenger =>({
-      ...passenger, 
-      label: (tempMap.get(passenger.value) || {}).label ||  '',
-      isActive: tempMap.has(passenger.value)
-    }));
-    setFormFielData(updatedFormFielData);
-  },[])
-
-  useEffect(()=>{
-    const updatedPassengers = formFielData
-      .filter(p=> p.isActive)
-      .map(({label, value}) => ({label, value}));
-    setPassengers(updatedPassengers);
     const newRules = rules.map(rule =>
       rule.type !== TOTAL_RULE ? rule
        : ({
          ...rule,
-         paxs: updatedPassengers.map(p=>p.value)
+         paxs: activePassengers.map(p=>p.key)
        }))
     setRules(newRules);
-  }, [formFielData]);
+  }, [activePassengers]);
 
   const handleChangeLabel = (value, index) => {
-    const updatedformFielData = [...formFielData]
-    updatedformFielData[index].label = value;
-    setFormFielData(updatedformFielData);
+    const updatedPassengers = [...passengers]
+    updatedPassengers[index].label = value;
+    setPassengers(updatedPassengers);
   }
 
   const handleEnableDisablePax = (index) => {
-    const updatedformFielData = [...formFielData]
-    updatedformFielData[index].isActive = !updatedformFielData[index].isActive;
-    updatedformFielData[index].label = updatedformFielData[index].isActive ?
-      updatedformFielData[index].label : '';
-    setFormFielData(updatedformFielData);
+    const updatedPassengers = [...passengers]
+    updatedPassengers[index].isActive = !updatedPassengers[index].isActive;
+    updatedPassengers[index].label = updatedPassengers[index].isActive ? 
+    updatedPassengers[index].label : '';
+    setPassengers(updatedPassengers);
   }
   
   return (
     <div className="flex flex-col mx-auto w-full lg:w-1/2">
       <label className="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">Passengers mapping</label>
       <ul>
-        {formFielData.map((field, idx) => (
+        {passengers.map((field, idx) => (
           <li
             key={idx}
             className="flex w-full py-1 px-2 justify-between"
