@@ -12,32 +12,50 @@ const rangeRulePassengerValueValue = (passenger = '', minval = 0, maxval = 9) =>
 }
 
 const simpleRulePassengerValue = (operator = '<=', passenger = '', value = 9) => {
-
+  if (passenger==='') return {};
   return { [operator] : [{"var": passenger}, value] };
 }
 
-const simpleRulePassengerPassenger = (operator, passengerLeft, passengerRight) => {
+const simpleRulePassengerPassenger = (operator = '<=', passengerLeft = '', passengerRight = '') => {
+  if (passengerLeft==='' || passengerRight==='') return {};
   return { [operator] : [{"var": passengerLeft}, {"var": passengerRight}] };
 }
 
-const multiplyRulePassengerPassengerByValue = (operator, passengerLeft, passengerRight, multiplyValue) => {
+const multiplyRulePassengerPassengerByValue = (operator = '<=', passengerLeft = '', passengerRight = '', multiplyValue = 1) => {
+  if (passengerLeft==='' || passengerRight==='') return {};
   return { [operator] : [{"var": passengerLeft}, {"*": [{"var": passengerRight}, multiplyValue]}] };
 }
 
-const sumRulePassengersValue = (operator, passengers, value) => {
+const sumRulePassengersValue = (operator = '<=', passengers = [], value = 0) => {
+  if (!passengers.length) return {};
   passengers = passengers.map((p = '') => {return {"var": p}});
   return { [operator] : [{ "+" : [ ...passengers] }, value] };
 }
 
-const sumRulePassengerPassengers = (operator, passenger, passengers) => {
+const sumRulePassengerPassengers = (operator = '<=', passenger = '', passengers= []) => {
+  if (!passengers.length || passenger==='') return {};
   passengers = passengers.map((p = '') => {return {"var": p}});
   return { [operator] : [{"var": passenger}, { "+" : [ ...passengers] }] };
 }
 
-const sumRulePassengersLeftPassengersRight = (operator, passengersLeft, passengersRight) => {
+const sumRulePassengersLeftPassengersRight = (operator = '<=', passengersLeft = [], passengersRight = []) => {
+  if (!passengersLeft.length || !passengersRight.length) return {};
   passengersLeft = passengersLeft.map((p = '') => {return {"var": p}});
   passengersRight = passengersRight.map((p = '') => {return {"var": p}});
   return { [operator] : [{ "+" : [ ...passengersLeft] }, { "+" : [ ...passengersLeft] }] };
+}
+
+const multiplyRulePassengersPassengerByValue = (operator = '<=', passengers = [], passenger= '', multiplyValue=1) => {
+  if (!passengers.length  || passenger==='') return {};
+  passengers = passengers.map((p = '') => {return {"var": p}});
+  return { [operator] : [{ "+" : [ ...passengers ] }, { "*": [{"var": passenger}, multiplyValue]  }] };
+}
+
+const multiplyRulePassengersPassengersByValue = (operator = '<=', passengersLeft = [], passengersRight= '', multiplyValue=1) => {
+  if (!passengersLeft.length || !passengersRight.length) return {};
+  passengersLeft = passengersLeft.map((p = '') => {return {"var": p}});
+  passengersRight = passengersRight.map((p = '') => {return {"var": p}});
+  return { [operator] : [{ "+" : [ ...passengersLeft ] }, { "*": [{ "+" : [ ...passengersLeft ] }, multiplyValue]  }] };
 }
 
 export const convertRulesToJS = (rules = []) => {
