@@ -7,19 +7,22 @@ import { PassengerProvider } from './context/PassengerContext';
 import { NavigationProvider } from './context/NavigationContext';
 import { RuleProvider } from './context/RuleContext';
 import { RuleFormatProvider } from './context/RuleFormatContext';
+import { TenantProvider } from './context/TenantContext';
 
 
 ReactDOM.render(
   <React.StrictMode>
-    <PassengerProvider>
-      <NavigationProvider>
-        <RuleProvider>
-          <RuleFormatProvider>
-            <App />
-          </RuleFormatProvider>
-        </RuleProvider>
-      </NavigationProvider>
-    </PassengerProvider>
+    <TenantProvider>
+      <PassengerProvider>
+        <NavigationProvider>
+          <RuleProvider>
+            <RuleFormatProvider>
+              <App />
+            </RuleFormatProvider>
+          </RuleProvider>
+        </NavigationProvider>
+      </PassengerProvider>
+    </TenantProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

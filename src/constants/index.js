@@ -10,7 +10,6 @@ export const SUM_PAX_VS_PAX_RULE = 'SUM_PAX_VS_PAX_RULE';
 export const SUM_PAX_VS_NUMBER_RULE = 'SUM_PAX_VS_NUMBER_RULE';
 export const SUM_PAX_VS_SUM_PAX_RULE = 'SUM_PAX_VS_SUM_PAX_RULE';
 
-
 /**
  * Operator constants
  */
