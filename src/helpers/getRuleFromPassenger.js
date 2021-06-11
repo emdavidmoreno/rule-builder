@@ -35,7 +35,7 @@ const sumRulePassengersValue = (operator = '<=', passengers = [], value = 0) => 
 const sumRulePassengerPassengers = (operator = '<=', passenger = '', passengers= []) => {
   if (!passengers.length || passenger==='') return {};
   passengers = passengers.map((p = '') => {return {"var": p}});
-  return { [operator] : [{"var": passenger}, { "+" : [ ...passengers] }] };
+  return { [operator] : [{ "+" : [ ...passengers] }, {"var": passenger}] };
 }
 
 const sumRulePassengersLeftPassengersRight = (operator = '<=', passengersLeft = [], passengersRight = []) => {
