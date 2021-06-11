@@ -9,7 +9,7 @@ const BaseSelector = ({
   handleChange = () => {},
 }) => {
   const getOptionLabel = (option) => option.label;
-  const getOptionValue = (option) => option.value;
+  const getOptionValue = (option) => option;
   const onSelectChange = (option) => {
     const value = 
       isMultiple ? option.map(o => o.value) : option.value;
