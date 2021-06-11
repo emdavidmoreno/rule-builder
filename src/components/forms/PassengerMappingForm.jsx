@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from 'react';
+import React, {useEffect } from 'react';
 import { TOTAL_RULE } from '../../constants';
 import { usePassengers } from '../../context/PassengerContext';
 import { useRules } from '../../context/RuleContext';

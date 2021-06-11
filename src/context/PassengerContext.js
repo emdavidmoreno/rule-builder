@@ -18,7 +18,6 @@ const PassengerContext = createContext();
 export const PassengerProvider = ({children}) => {
   const [totalPassengers, setTotalPassengers] = useState(9);
   const [passengers, setPassengers] = useState(initialPassengers);
-  const [rulesString, setRulesString] = useState(null);
 
   return <PassengerContext.Provider
   value={{
@@ -27,8 +26,6 @@ export const PassengerProvider = ({children}) => {
     passengers,
     activePassengers: passengers.filter(p => p.isActive),
     setPassengers,
-    rulesString,
-    setRulesString,
   }}
   >
     {children}

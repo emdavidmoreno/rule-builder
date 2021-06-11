@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { usePassengers } from "../../context/PassengerContext"
 import { useRules } from "../../context/RuleContext";
 import { evaluateRules } from "../../helpers/evaluateRules";
@@ -31,17 +30,8 @@ const TravelerOption = ({ id, handleChange, value = 0, label = '' }) => {
 
 const TravelerSelector = () => {
   const {passengers, setPassengers} = usePassengers();
-  const [travelers, setTravelers] = useState([]);
   const {rules} = useRules();
-
-  useEffect(()=>{
-    setTravelers(passengers.map((passenger, index) =>({
-      label: passenger.label,
-      key: passenger.value,
-      value: index === 0 ? 1 : 0
-    })))
-  },[passengers, rules])
-  
+ 
   const handleChange = (value, index) => {
     if(value < 0) return;
     const updatedPassengers = passengers

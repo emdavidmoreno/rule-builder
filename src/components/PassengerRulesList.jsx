@@ -1,9 +1,10 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { SUM_PAX_VS_PAX_RULE, PAX_VS_PAX_RULE, RANGE_RULE, SIMPLE_RULE, SUM_PAX_VS_NUMBER_RULE, SUM_PAX_VS_SUM_PAX_RULE, PAX_VS_PAX_MULTIPLY_RULE, GREATER_THAN_OR_EQUAL_TO, DOUBLE_EQUAL_TO, TOTAL_RULE } from '../constants';
 import { useRules } from '../context/RuleContext';
 import { SumPaxVsPaxRuleForm, SumPaxVsNumberRuleForm, PaxVsPaxRuleForm, RangeRuleForm, SimpleRuleForm, SumPaxVsSumPaxRuleForm } from './forms';
 import { SimpleRuleView, RangeRuleView, PaxVsPaxRuleView, SumPaxVsNumberRuleView, SumPaxVsPaxRuleView, SumPaxVsSumPaxRuleView } from './views';
 import DropdownActionButtons from './presentation/DropdownActionButtons';
+import { usePassengers } from '../context/PassengerContext';
 
 
 const PassengerRulesList = () => {
@@ -11,6 +12,14 @@ const PassengerRulesList = () => {
     rules = [],
     setRules,
   } = useRules();
+  const {passengers, setPassengers} = usePassengers();
+
+  useEffect(()=>{
+    setPassengers(passengers.map((passenger, index) =>({
+      ...passenger,
+      value: index === 0 ? 1 : 0
+    })))
+  },[rules])
   
   const [isOpen, toggleIsOpen] = useState(false);
 

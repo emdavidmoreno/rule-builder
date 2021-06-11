@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { TOTAL_RULE } from '../../constants';
 import { usePassengers } from '../../context/PassengerContext';
 import { useRules } from '../../context/RuleContext';
@@ -9,7 +9,7 @@ const TotalPassengerForm = () => {
   const {totalPassengers, setTotalPassengers} = usePassengers();
   const {rules, setRules} = useRules();
 
-  const handleUpdateTotalRule =useCallback(() => {
+  useEffect(()=>{
     setRules(rules.map(rule=>{
       return rule.type !== TOTAL_RULE ? rule
         : {
@@ -17,10 +17,6 @@ const TotalPassengerForm = () => {
           total: Number(totalPassengers),
         }
     }));
-  },[totalPassengers])
-
-  useEffect(()=>{
-    handleUpdateTotalRule()
   },[totalPassengers]);
   
   return (

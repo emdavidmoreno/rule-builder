@@ -10,11 +10,6 @@ const BaseSelector = ({
 }) => {
   const getOptionLabel = (option) => option.label;
   const getOptionValue = (option) => option;
-  const onSelectChange = (option) => {
-    const value = 
-      isMultiple ? option.map(o => o.value) : option.value;
-    handleChange(value, id, name)
-  };
   
   return (
     <div className="relative w-full h-auto">
