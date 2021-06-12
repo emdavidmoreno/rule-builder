@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { TOTAL_RULE } from '../../constants';
 import { usePassengers } from '../../context/PassengerContext';
 import { useRules } from '../../context/RuleContext';
@@ -8,16 +8,25 @@ const TotalPassengerForm = () => {
 
   const {totalPassengers, setTotalPassengers} = usePassengers();
   const {rules, setRules} = useRules();
+  const rulesUpdated = useRef(true);
 
   useEffect(()=>{
-    setRules(rules.map(rule=>{
-      return rule.type !== TOTAL_RULE ? rule
-        : {
-          ...rule,
-          total: Number(totalPassengers),
-        }
-    }));
-  },[totalPassengers]);
+    if(!rulesUpdated.current){
+      setRules(r => rules.map(rule=>{
+        return rule.type !== TOTAL_RULE ? rule
+          : {
+            ...rule,
+            total: Number(totalPassengers),
+          }
+      }));
+      rulesUpdated.current = true;
+    }
+  },[totalPassengers, setRules, rules]);
+
+  const handleChangePassenger = value => {
+    rulesUpdated.current = false;
+    setTotalPassengers(value);
+  }
   
   return (
     <div className="flex flex-col pb-4 w-full border-b mb-3">
@@ -27,7 +36,7 @@ const TotalPassengerForm = () => {
           id={'totalPassengers'}
           name={'totalPassengers'}
           value={totalPassengers}
-          handleChange={(value) => setTotalPassengers(value)}
+          handleChange={handleChangePassenger}
         />
       </div>
     </div>

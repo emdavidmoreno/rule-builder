@@ -1,4 +1,4 @@
-import React, {useEffect } from 'react';
+import React, {useEffect, useRef } from 'react';
 import { TOTAL_RULE } from '../../constants';
 import { usePassengers } from '../../context/PassengerContext';
 import { useRules } from '../../context/RuleContext';
@@ -15,24 +15,30 @@ const initialPassengers = new Array(9).fill(null)
 const PassengerMappingForm = () => {
   const { passengers, activePassengers, setPassengers } = usePassengers();
   const {  rules, setRules, } = useRules();
+  const passengersUpdated = useRef(true)
   
   useEffect(()=>{
-    const newRules = rules.map(rule =>
-      rule.type !== TOTAL_RULE ? rule
-       : ({
-         ...rule,
-         paxs: activePassengers.map(p=>p.key)
-       }))
-    setRules(newRules);
-  }, [activePassengers]);
+    if(!passengersUpdated.current) {
+      const newRules = rules.map(rule =>
+        rule.type !== TOTAL_RULE ? rule
+        : ({
+          ...rule,
+          paxs: activePassengers.map(p=>p.key)
+        }))
+      setRules(newRules);
+      passengersUpdated.current = true;
+      }
+  }, [activePassengers, rules, setRules]);
 
   const handleChangeLabel = (value, index) => {
+    passengersUpdated.current = false;
     const updatedPassengers = [...passengers]
     updatedPassengers[index].label = value;
     setPassengers(updatedPassengers);
   }
 
   const handleEnableDisablePax = (index) => {
+    passengersUpdated.current = false;
     const updatedPassengers = [...passengers]
     updatedPassengers[index].isActive = !updatedPassengers[index].isActive;
     updatedPassengers[index].label = updatedPassengers[index].isActive ? 

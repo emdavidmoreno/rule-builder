@@ -1,4 +1,17 @@
-import { SUM_PAX_VS_PAX_RULE, PAX_VS_PAX_RULE, RANGE_RULE, SIMPLE_RULE, SUM_PAX_VS_NUMBER_RULE, SUM_PAX_VS_SUM_PAX_RULE, TOTAL_RULE, RULE_DEFAULT_FORMAT, PAX_VS_PAX_MULTIPLY_RULE, RULE_COMPACT_FORMAT } from "../constants";
+import { 
+  TOTAL_RULE, 
+  RANGE_RULE,
+  SIMPLE_RULE,
+  PAX_VS_PAX_RULE,
+  SUM_PAX_VS_PAX_RULE,
+  RULE_DEFAULT_FORMAT, 
+  RULE_COMPACT_FORMAT, 
+  SUM_PAX_VS_NUMBER_RULE,
+  SUM_PAX_VS_SUM_PAX_RULE,
+  PAX_VS_PAX_MULTIPLY_RULE, 
+  SUM_PAX_VS_PAX_MULTIPLY_RULE,
+  SUM_PAX_VS_SUM_PAX_MULTIPLY_RULE, 
+} from "../constants";
 
 const totalRule = (passengers = [], total = 9) => {
   if (!passengers.length) return {};
@@ -77,6 +90,10 @@ export const convertRulesToJS = (rules = []) => {
         return sumRulePassengerPassengers(rule.operator, rule.pax, rule.paxs);
       case PAX_VS_PAX_MULTIPLY_RULE:
         return multiplyRulePassengerPassengerByValue(rule.operator, rule.leftPax, rule.rightPax, rule.multiplier);
+      case SUM_PAX_VS_PAX_MULTIPLY_RULE:
+        return multiplyRulePassengersPassengerByValue(rule.operator,rule.paxs, rule.pax, rule.multiplier);
+      case SUM_PAX_VS_SUM_PAX_MULTIPLY_RULE:
+        return multiplyRulePassengersPassengersByValue (rule.operator,rule.leftPaxs, rule.rightPaxs, rule.multiplier);
       default:
         return '';
     }

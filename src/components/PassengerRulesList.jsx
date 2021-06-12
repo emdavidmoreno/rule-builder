@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import { SUM_PAX_VS_PAX_RULE, PAX_VS_PAX_RULE, RANGE_RULE, SIMPLE_RULE, SUM_PAX_VS_NUMBER_RULE, SUM_PAX_VS_SUM_PAX_RULE, PAX_VS_PAX_MULTIPLY_RULE, GREATER_THAN_OR_EQUAL_TO, DOUBLE_EQUAL_TO, TOTAL_RULE } from '../constants';
 import { useRules } from '../context/RuleContext';
 import { SumPaxVsPaxRuleForm, SumPaxVsNumberRuleForm, PaxVsPaxRuleForm, RangeRuleForm, SimpleRuleForm, SumPaxVsSumPaxRuleForm } from './forms';
@@ -8,23 +8,25 @@ import { usePassengers } from '../context/PassengerContext';
 
 
 const PassengerRulesList = () => {
-  const {
-    rules = [],
-    setRules,
-  } = useRules();
-  const {passengers, setPassengers} = usePassengers();
+  const {rules, setRules } = useRules();
+  const { passengers, setPassengers } = usePassengers();
+  const passengersUpdated = useRef(true)
 
   useEffect(()=>{
-    setPassengers(passengers.map((passenger, index) =>({
-      ...passenger,
-      value: index === 0 ? 1 : 0
-    })))
-  },[rules])
+    if(!passengersUpdated.current) {
+      setPassengers(passengers.map((passenger, index) =>({
+        ...passenger,
+        value: index === 0 ? 1 : 0
+      })))
+      passengersUpdated.current = true;
+    }
+  },[rules,passengers, setPassengers])
   
   const [isOpen, toggleIsOpen] = useState(false);
 
   const AddRule = type => {
     toggleIsOpen(!isOpen);
+    passengersUpdated.current = false;
     switch (type) {
       case SIMPLE_RULE:
         return setRules([...rules,{
@@ -96,25 +98,29 @@ const PassengerRulesList = () => {
   }
 
   const saveRule = (index) => {
+    passengersUpdated.current = false;
     const newData = [...rules];
     newData[index].isEditing = false;
     setRules(newData);
   }
 
   const editRule = (index) => {
+    passengersUpdated.current = false;
     const newData = [...rules];
     newData[index].isEditing = true;
     setRules(newData);
   }
 
   const removeRule = (index)  => {
+    passengersUpdated.current = false;
     setRules(rules.filter((f, idx) => index !== idx));
   }
 
   const handleChangeRuleValues = (value = '', index = '', key = '')=> {
-      const updatedRules = [...rules]
-      updatedRules[index][key] = value;
-      setRules(updatedRules);
+    passengersUpdated.current = false;
+    const updatedRules = [...rules]
+    updatedRules[index][key] = value;
+    setRules(updatedRules);
   }
 
   return (
