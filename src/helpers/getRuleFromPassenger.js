@@ -13,14 +13,14 @@ import {
   SUM_PAX_VS_SUM_PAX_MULTIPLY_RULE, 
 } from "../constants";
 
-const totalRule = (passengers = [], total = 9) => {
-  if (!passengers.length) return {};
+export const totalRule = (passengers = [], total = 9) => {
+  if (!passengers.length || total < 0) return {};
   passengers = passengers.map((p = '') => {return {"var": p}});
   return { "<=" : [{ "+" : [ ...passengers] }, total] };
 }
 
-const rangeRulePassengerValueValue = (passenger = '', minval = 0, maxval = 9) => {
-  if (passenger==='') return {};
+export const rangeRulePassengerValueValue = (passenger = '', minval = 0, maxval = 9) => {
+  if (passenger==='' || minval < 0 || maxval < 0) return {};
   return { "and" : [{ ">=" : [{"var": passenger}, minval] }, { "<=" : [{"var": passenger}, maxval] }] };
 }
 
