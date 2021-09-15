@@ -7,3 +7,4 @@ export { default as PaxVsPaxRuleForm} from './PaxVsPaxRuleForm';
 export { default as SumPaxVsPaxRuleForm} from './SumPaxVsPaxRuleForm';
 export { default as SumPaxVsNumberRuleForm} from './SumPaxVsNumberRuleForm';
 export { default as SumPaxVsSumPaxRuleForm} from './SumPaxVsSumPaxRuleForm';
+export { default as PaxVsMultiplyPaxNumberRuleForm } from './PaxVsMultiplyPaxNumberRuleForm';

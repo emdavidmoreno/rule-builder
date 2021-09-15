@@ -1,10 +1,11 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
-import { SUM_PAX_VS_PAX_RULE, PAX_VS_PAX_RULE, RANGE_RULE, SIMPLE_RULE, SUM_PAX_VS_NUMBER_RULE, SUM_PAX_VS_SUM_PAX_RULE, PAX_VS_PAX_MULTIPLY_RULE, GREATER_THAN_OR_EQUAL_TO, DOUBLE_EQUAL_TO, TOTAL_RULE } from '../constants';
+import { SUM_PAX_VS_PAX_RULE, PAX_VS_PAX_RULE, RANGE_RULE, SIMPLE_RULE, SUM_PAX_VS_NUMBER_RULE, SUM_PAX_VS_SUM_PAX_RULE, PAX_VS_PAX_MULTIPLY_RULE, GREATER_THAN_OR_EQUAL_TO, DOUBLE_EQUAL_TO, TOTAL_RULE, SUM_PAX_VS_PAX_MULTIPLY_RULE } from '../constants';
 import { useRules } from '../context/RuleContext';
-import { SumPaxVsPaxRuleForm, SumPaxVsNumberRuleForm, PaxVsPaxRuleForm, RangeRuleForm, SimpleRuleForm, SumPaxVsSumPaxRuleForm } from './forms';
-import { SimpleRuleView, RangeRuleView, PaxVsPaxRuleView, SumPaxVsNumberRuleView, SumPaxVsPaxRuleView, SumPaxVsSumPaxRuleView } from './views';
+import { SumPaxVsPaxRuleForm, SumPaxVsNumberRuleForm, PaxVsPaxRuleForm, RangeRuleForm, SimpleRuleForm, SumPaxVsSumPaxRuleForm, PaxVsMultiplyPaxNumberRuleForm } from './forms';
+import { SimpleRuleView, RangeRuleView, PaxVsPaxRuleView, SumPaxVsNumberRuleView, SumPaxVsPaxRuleView, SumPaxVsSumPaxRuleView, PaxVsMultiplyPaxNumberRuleView, SumPaxVsMultiplyPaxNumberRuleView } from './views';
 import DropdownActionButtons from './presentation/DropdownActionButtons';
 import { usePassengers } from '../context/PassengerContext';
+import SumPaxVsMultiplyPaxNumberRuleForm from './forms/SumPaxVsMultiplyPaxNumberRuleForm';
 
 
 const PassengerRulesList = () => {
@@ -61,7 +62,17 @@ const PassengerRulesList = () => {
           leftPax: 'age1',
           operator: DOUBLE_EQUAL_TO,
           rightPax: 'age1',
-          multiplier: 1,
+          number: 1,
+          isEditing: true,
+        }]);
+
+      case SUM_PAX_VS_PAX_MULTIPLY_RULE:
+        return setRules([...rules, {
+          type: SUM_PAX_VS_PAX_MULTIPLY_RULE,
+          paxs: ['age1'],
+          operator: DOUBLE_EQUAL_TO,
+          pax: 'age1',
+          number: 1,
           isEditing: true,
         }]);
 
@@ -153,6 +164,14 @@ const PassengerRulesList = () => {
           {
             label: 'Sum Pax vs Sum Pax rule',
             action: ()=> AddRule(SUM_PAX_VS_SUM_PAX_RULE),
+          },
+          {
+            label: 'Pax vs Pax Multiply Number rule',
+            action: ()=> AddRule(PAX_VS_PAX_MULTIPLY_RULE),
+          },
+          {
+            label: 'Sum Pax vs Pax Multiply Number rule',
+            action: ()=> AddRule(SUM_PAX_VS_PAX_MULTIPLY_RULE),
           },
         ]}
       />
@@ -249,6 +268,38 @@ const PassengerRulesList = () => {
               )}
               {(r.type === SUM_PAX_VS_SUM_PAX_RULE && !r.isEditing) && (
                 <SumPaxVsSumPaxRuleView
+                  {...r}
+                  id={i}
+                  handleEdit={editRule}
+                  handleRemove={removeRule}
+                />
+              )}
+              {(r.type === PAX_VS_PAX_MULTIPLY_RULE && r.isEditing) && (
+                <PaxVsMultiplyPaxNumberRuleForm
+                  {...r}
+                  id={i}
+                  handleChange={handleChangeRuleValues}
+                  handleSave={saveRule} 
+                />
+              )}
+              {(r.type === PAX_VS_PAX_MULTIPLY_RULE && !r.isEditing) && (
+                <PaxVsMultiplyPaxNumberRuleView
+                  {...r}
+                  id={i}
+                  handleEdit={editRule}
+                  handleRemove={removeRule}
+                />
+              )}
+              {(r.type === SUM_PAX_VS_PAX_MULTIPLY_RULE && r.isEditing) && (
+                <SumPaxVsMultiplyPaxNumberRuleForm
+                  {...r}
+                  id={i}
+                  handleChange={handleChangeRuleValues}
+                  handleSave={saveRule} 
+                />
+              )}
+              {(r.type === SUM_PAX_VS_PAX_MULTIPLY_RULE && !r.isEditing) && (
+                <SumPaxVsMultiplyPaxNumberRuleView
                   {...r}
                   id={i}
                   handleEdit={editRule}
