@@ -4,7 +4,7 @@ import DropdownActionButtons from './DropdownActionButtons';
 import { DROPDOWN_ACTIONS } from '../../../constants';
 
 export default {
-  title: 'Rule Builder/Drop Down Action List',
+  title: 'Presentation/Drop Down Action List',
   component: DropdownActionButtons,
   decorators: [
     (Story) => (

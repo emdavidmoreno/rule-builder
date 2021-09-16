@@ -5,7 +5,7 @@ import {SideBarItem} from '../sidebar/SideBar';
 import '../../../index.css'
 
 export default {
-  title: 'Rule Builder/SidebarItem',
+  title: 'Presentation/SidebarItem',
   component: SideBarItem,
 };
 

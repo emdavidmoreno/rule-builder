@@ -3,7 +3,7 @@ import { action } from '@storybook/addon-actions';
 import {SideBarList as SideBar} from '../sidebar/SideBar';
 
 export default {
-  title: 'Rule Builder/Sidebar',
+  title: 'Presentation/Sidebar',
   component: SideBar,
 };
 
