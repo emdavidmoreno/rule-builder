@@ -15,7 +15,7 @@ const DropdownActionButtons = ({
         <span className="pr-1 font-semibold flex-1">{buttonLabel}</span>
         <span>
           <svg
-            className={`fill-current h-4 w-4 transform transition duration-150 ease-in-out ${isOpen && '-rotate-180'}`}
+            className={`fill-current h-full w-4 transform transition duration-150 ease-in-out ${isOpen && '-rotate-180'} flex justify-center`}
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
           >
@@ -26,12 +26,12 @@ const DropdownActionButtons = ({
         </span>
       </button>
       <ul
-          className={`bg-white rounded-sm shadow-sm overflow-hidden transform ${isOpen === true ? 'flex flex-col': 'hidden'} absolute transition duration-150 ease-in-out origin-top w-48 z-10`}
+          className={`bg-white rounded-sm shadow-sm overflow-hidden transform ${isOpen === true ? 'flex flex-col': 'hidden'} absolute transition duration-150 ease-in-out origin-top w-full max-w-xs z-10 p-0`}
         >
           {actions.map((item, idx) =>(
             <li 
               key={idx}
-              className="flex text-sm capitalize text-gray-700 hover:bg-blue-500 hover:text-white w-1/2 border w-full"
+              className="flex text-sm capitalize text-gray-700 hover:bg-blue-500 hover:text-white border w-full px-4 m-0"
             >
               <button 
                 className="block w-full py-2 fill-current"
