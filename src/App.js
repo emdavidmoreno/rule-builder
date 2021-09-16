@@ -6,7 +6,6 @@ import PassengerMappingForm from './components/forms/PassengerMappingForm';
 import PassengerRulesList from './components/PassengerRulesList';
 import {RuleViewer, Sidebar} from './components/presentation';
 import TravelerSelector from './components/travelerSelector';
-import { IoMdMenu } from "react-icons/io";
 
 function App() {
 
