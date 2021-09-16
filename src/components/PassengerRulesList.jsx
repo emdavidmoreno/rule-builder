@@ -3,9 +3,9 @@ import { SUM_PAX_VS_PAX_RULE, PAX_VS_PAX_RULE, RANGE_RULE, SIMPLE_RULE, SUM_PAX_
 import { useRules } from '../context/RuleContext';
 import { SumPaxVsPaxRuleForm, SumPaxVsNumberRuleForm, PaxVsPaxRuleForm, RangeRuleForm, SimpleRuleForm, SumPaxVsSumPaxRuleForm, PaxVsMultiplyPaxNumberRuleForm } from './forms';
 import { SimpleRuleView, RangeRuleView, PaxVsPaxRuleView, SumPaxVsNumberRuleView, SumPaxVsPaxRuleView, SumPaxVsSumPaxRuleView, PaxVsMultiplyPaxNumberRuleView, SumPaxVsMultiplyPaxNumberRuleView } from './views';
-import DropdownActionButtons from './presentation/DropdownActionButtons';
 import { usePassengers } from '../context/PassengerContext';
 import SumPaxVsMultiplyPaxNumberRuleForm from './forms/SumPaxVsMultiplyPaxNumberRuleForm';
+import { DropdownActionButtons } from './presentation';
 
 
 const PassengerRulesList = () => {
