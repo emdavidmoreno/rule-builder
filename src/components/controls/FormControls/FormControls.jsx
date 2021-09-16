@@ -5,7 +5,7 @@ const FormControls = ({
 }) => {
   return (
     <button
-        className="inline-block p-2 text-center text-white transition bg-blue-800 rounded-full shadow ripple hover:shadow-lg hover:bg-blue-600 focus:outline-none ml-4"
+        className="flex p-2 text-center text-white rounded-full shadow transition bg-blue-800 hover:shadow-lg hover:bg-blue-600 focus:outline-none ml-4"
         onClick={handleSave}
       >
         <FaCheck
