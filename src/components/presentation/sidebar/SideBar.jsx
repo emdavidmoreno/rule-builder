@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { MdAirplanemodeActive } from "react-icons/md";
 import Placeholder from './Placeholder';
 import { useTenants } from "../../../context/TenantContext";
@@ -17,6 +18,25 @@ export const SideBarItem = ({code, name, isSelected, onClick}) => (
     {name}
   </button>
 )
+
+SideBarItem.propTypes = {
+  /**
+   * Airline code associated
+   */
+  code: PropTypes.string,
+  /**
+   * Airline name associated
+   */
+  name: PropTypes.string,
+  /**
+   * Is this airline selected by the user?
+   */
+  isSelected: PropTypes.bool,
+  /**
+   * Optional click handler
+   */
+  onClick: PropTypes.func,
+};
 
 export const SideBarList = ({
   tenants = [], 
@@ -90,6 +110,21 @@ export const SideBarList = ({
       </div>
     </>
   );
+};
+
+SideBarList.propTypes = {
+  tenants: PropTypes.arrayOf(PropTypes.shape({
+    _id: PropTypes.string,
+    code: PropTypes.string,
+    name: PropTypes.string,
+    hasFc: PropTypes.bool,
+  })), 
+  loading: PropTypes.bool, 
+  show: PropTypes.bool, 
+  toggleFunction: PropTypes.func,
+  handleSearch:  PropTypes.func,
+  selectedTenant: PropTypes.object,
+  setSelectecTenant:  PropTypes.func,
 };
 
 export default function SideBar({show, toggleFunction}) {

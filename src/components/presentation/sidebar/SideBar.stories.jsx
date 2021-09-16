@@ -1,33 +1,17 @@
 import React from 'react';
-import {SideBarItem, SideBarList} from '../sidebar/SideBar';
+import { action } from '@storybook/addon-actions';
+import {SideBarList as SideBar} from '../sidebar/SideBar';
+
+import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
 
 import '../../../index.css'
 
 export default {
   title: 'Rule Builder/Sidebar',
-  component: SideBarList,
-  subcomponents: { SideBarItem },
+  component: SideBar,
 };
 
-const ItemTemplate = (args) => <SideBarItem {...args} />
-
-export const SidebarItemDefault = ItemTemplate.bind({});
-SidebarItemDefault.args = {
-  code: 'ac',
-  name: 'Air Canada',
-  isSelected: false,
-  onClick: () => {}
-}
-
-export const SideBarItemSelected = ItemTemplate.bind({});
-SideBarItemSelected.args = {
-  code: 'ac',
-  name: 'Air Canada',
-  isSelected: true,
-  onClick: () => {}
-}
-
-const SideBarTemplate = (args) => <SideBarList {...args} />
+const SideBarTemplate = (args) => <SideBar {...args} />
 
 export const LoadingSideBar = SideBarTemplate.bind({});
 LoadingSideBar.args = {
@@ -43,23 +27,23 @@ LoadedSideBarDesktop.args = {
       code: 'ac',
       name: 'Air Canada',
       isSelected: false,
-      onClick: () => {}
+      onClick:  action('clicked')
     },
     {
       code: 'oa',
       name: 'Olympic Air',
       isSelected: false,
-      onClick: () => {}
+      onClick: action('clicked')
     },
     {
       code: 'fz',
       name: 'Fly Dubai',
       isSelected: false,
-      onClick: () => {}
+      onClick: action('clicked')
     },
   ], 
   selectedTenant: {code: 'oa'},
-  setSelectecTenant: () => {},
+  setSelectecTenant: action('clicked'),
   loading: false,
   show: true,
 }
@@ -71,23 +55,29 @@ LoadedSideBarMobileHidden.args = {
       code: 'ac',
       name: 'Air Canada',
       isSelected: false,
-      onClick: () => {}
+      onClick: action('clicked')
     },
     {
       code: 'oa',
       name: 'Olympic Air',
       isSelected: false,
-      onClick: () => {}
+      onClick: action('clicked')
     },
     {
       code: 'fz',
       name: 'Fly Dubai',
       isSelected: false,
-      onClick: () => {}
+      onClick: action('clicked')
     },
   ], 
   selectedTenant: {code: 'oa'},
-  setSelectecTenant: () => {},
+  setSelectecTenant: action('clicked'),
   loading: false,
   show: false,
+};
+
+LoadedSideBarMobileHidden.parameters = {
+  viewport: {
+    defaultViewport: 'iphonex'
+  },
 }
