@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
-import { SUM_PAX_VS_PAX_RULE, PAX_VS_PAX_RULE, RANGE_RULE, SIMPLE_RULE, SUM_PAX_VS_NUMBER_RULE, SUM_PAX_VS_SUM_PAX_RULE, PAX_VS_PAX_MULTIPLY_RULE, GREATER_THAN_OR_EQUAL_TO, DOUBLE_EQUAL_TO, TOTAL_RULE, SUM_PAX_VS_PAX_MULTIPLY_RULE } from '../constants';
+import { SUM_PAX_VS_PAX_RULE, PAX_VS_PAX_RULE, RANGE_RULE, SIMPLE_RULE, SUM_PAX_VS_NUMBER_RULE, SUM_PAX_VS_SUM_PAX_RULE, PAX_VS_PAX_MULTIPLY_RULE, GREATER_THAN_OR_EQUAL_TO, DOUBLE_EQUAL_TO, TOTAL_RULE, SUM_PAX_VS_PAX_MULTIPLY_RULE, DROPDOWN_ACTIONS } from '../constants';
 import { useRules } from '../context/RuleContext';
 import { SumPaxVsPaxRuleForm, SumPaxVsNumberRuleForm, PaxVsPaxRuleForm, RangeRuleForm, SimpleRuleForm, SumPaxVsSumPaxRuleForm, PaxVsMultiplyPaxNumberRuleForm } from './forms';
 import { SimpleRuleView, RangeRuleView, PaxVsPaxRuleView, SumPaxVsNumberRuleView, SumPaxVsPaxRuleView, SumPaxVsSumPaxRuleView, PaxVsMultiplyPaxNumberRuleView, SumPaxVsMultiplyPaxNumberRuleView } from './views';
@@ -134,46 +134,17 @@ const PassengerRulesList = () => {
     setRules(updatedRules);
   }
 
+
   return (
     <div>
       <DropdownActionButtons
         buttonLabel={'Add rule'}
         isOpen={isOpen}
         toggleIsOpen={toggleIsOpen}
-        actions={[
-          {
-            label: 'Simple rule',
-            action: ()=> AddRule(SIMPLE_RULE),
-          },
-          {
-            label: 'Range rule',
-            action: ()=> AddRule(RANGE_RULE),
-          },
-          {
-            label: 'Pax vs Pax rule',
-            action: ()=> AddRule(PAX_VS_PAX_RULE),
-          },
-          {
-            label: 'Sum Pax vs pax rule',
-            action: ()=> AddRule(SUM_PAX_VS_PAX_RULE),
-          },
-          {
-            label: 'Sum Pax vs Number rule',
-            action: ()=> AddRule(SUM_PAX_VS_NUMBER_RULE),
-          },
-          {
-            label: 'Sum Pax vs Sum Pax rule',
-            action: ()=> AddRule(SUM_PAX_VS_SUM_PAX_RULE),
-          },
-          {
-            label: 'Pax vs Pax Multiply Number rule',
-            action: ()=> AddRule(PAX_VS_PAX_MULTIPLY_RULE),
-          },
-          {
-            label: 'Sum Pax vs Pax Multiply Number rule',
-            action: ()=> AddRule(SUM_PAX_VS_PAX_MULTIPLY_RULE),
-          },
-        ]}
+        actions={DROPDOWN_ACTIONS.map(item => ({
+          ...item,
+          action: () => AddRule(item.action),
+        }))}
       />
       <ul className="pt-6">
         {rules.length > 0 && rules.map((r, i) => {
