@@ -18,12 +18,6 @@ function App() {
     <div className="flex mx-auto w-screen h-screen justify-between">
       <Sidebar show={showSideBar} toggleFunction={toggleSideBar} />
       <div className="w-full p-8 xl:ml-64">
-        <button
-          onClick={() => toggleSideBar(true)}
-          className="xl:hidden text-3xl mb-3 text-blue-800 focus:outline-none w-12"
-        >
-          <IoMdMenu />
-        </button>
         {/* topbar */}
 
         {/* content */}
