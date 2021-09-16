@@ -7,9 +7,9 @@ const ViewControls = ({
   handleRemove = () => {},
 }) => {
   return (
-    <div>
+    <div className="flex">
       <button 
-          className="inline-block p-2 text-center text-blue-500 border bg-white transition border-blue-500 rounded-full shadow ripple hover:shadow-lg hover:border-blue-600 hover:text-bllue-600 focus:outline-none waves-effect mx-1"
+          className="flex p-2 text-center text-blue-500 border bg-white transition border-blue-500 rounded-full shadow ripple hover:shadow-lg hover:border-blue-600 hover:text-bllue-600 focus:outline-none waves-effect mx-1"
           onClick={() => handleEdit(id)}
         >
           <FaEdit 
@@ -17,7 +17,7 @@ const ViewControls = ({
           />
         </button>
         <button 
-          className="inline-block p-2 text-center text-white transition bg-red-500 rounded-full shadow ripple hover:shadow-lg hover:bg-red-600 focus:outline-none waves-effect mx-1"
+          className="flex p-2 text-center text-white transition bg-red-500 rounded-full shadow ripple hover:shadow-lg hover:bg-red-600 focus:outline-none waves-effect mx-1"
           onClick={() => handleRemove(id)}
         >
           <FaRegTrashAlt
