@@ -7,7 +7,7 @@ const SumPaxVsMultiplyPaxNumberRuleView = ({
   paxs = [],
   operator = '',
   pax = '',
-  number = 1,
+  multiplier = 1,
   handleEdit = () => {},
   handleRemove = () => {},
 }) => {
@@ -24,7 +24,7 @@ const SumPaxVsMultiplyPaxNumberRuleView = ({
       <span className="text-md font-bold mr-1"> Sum[ {paxLabels.join(',')} ]</span>
       <span className="text-xs font-normal mx-1">{operator}</span>
       ( <span className="text-md font-bold mr-1 ml-1"> {(activePassengers.filter(p=> p.key === pax))[0].label || ''}</span>
-       x <span className="text-md font-bold mr-1 ml-1">{number}</span> )
+       x <span className="text-md font-bold mr-1 ml-1">{multiplier}</span> )
       
     </RuleViewerWrapper>
   );

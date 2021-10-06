@@ -7,7 +7,7 @@ const PaxVsMultiplyPaxNumberRuleForm = ({
   leftPax = '',
   operator = '',
   rightPax = '',
-  number = 1,
+  multiplier = 1,
   handleChange = () => {},
   handleSave = ()=> {},
 }) => {
@@ -36,8 +36,8 @@ const PaxVsMultiplyPaxNumberRuleForm = ({
       />
       <NumberSelector
         id={id}
-        name={'number'}
-        value={number}
+        name={'multiplier'}
+        value={multiplier}
         handleChange={handleChange}
       />
     </RuleFormWrapper>
