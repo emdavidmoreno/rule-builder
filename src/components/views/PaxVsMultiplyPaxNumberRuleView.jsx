@@ -7,7 +7,7 @@ const PaxVsMultiplyPaxNumberRuleView = ({
   leftPax = '',
   operator = '',
   rightPax = '',
-  number = 1,
+  multiplier = 1,
   handleEdit = () => {},
   handleRemove = () => {},
 }) => {
@@ -22,7 +22,7 @@ const PaxVsMultiplyPaxNumberRuleView = ({
       <span className="text-md font-bold mr-1"> {(activePassengers.filter(p=> p.key === leftPax))[0].label || ''}</span>
       <span className="text-xs font-normal mx-1">{operator}</span>
       ( <span className="text-md font-bold mr-1 ml-1"> {(activePassengers.filter(p=> p.key === rightPax))[0].label || ''}</span>
-       x <span className="text-md font-bold mr-1 ml-1">{number}</span> )
+       x <span className="text-md font-bold mr-1 ml-1">{multiplier}</span> )
       
     </RuleViewerWrapper>
   );
