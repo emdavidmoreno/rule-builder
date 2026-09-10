@@ -4,25 +4,25 @@ import { Button } from "@/components/ui/button"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { NumberInput } from "@/components/selectors/number-input"
 import { OperatorSelect } from "@/components/selectors/operator-select"
-import { PaxSelect } from "@/components/selectors/pax-select"
+import { FieldSelect } from "@/components/selectors/field-select"
 import {
-  PAX_VS_PAX_MULTIPLY_RULE,
-  PAX_VS_PAX_RULE,
+  FIELD_VS_FIELD_MULTIPLY_RULE,
+  FIELD_VS_FIELD_RULE,
   RANGE_RULE,
   SIMPLE_RULE,
-  SUM_PAX_VS_NUMBER_RULE,
-  SUM_PAX_VS_PAX_MULTIPLY_RULE,
-  SUM_PAX_VS_PAX_RULE,
-  SUM_PAX_VS_SUM_PAX_MULTIPLY_RULE,
-  SUM_PAX_VS_SUM_PAX_RULE,
+  SUM_FIELDS_VS_FIELD_MULTIPLY_RULE,
+  SUM_FIELDS_VS_FIELD_RULE,
+  SUM_FIELDS_VS_NUMBER_RULE,
+  SUM_FIELDS_VS_SUM_FIELDS_MULTIPLY_RULE,
+  SUM_FIELDS_VS_SUM_FIELDS_RULE,
+  type BuilderRule,
   type ComparisonOperator,
-  type Passenger,
-  type Rule,
-} from "@/types/rule-builder"
+  type FieldValue,
+} from "@/core/builder"
 
 type RuleFormProps = {
-  rule: Rule
-  passengers: Passenger[]
+  rule: BuilderRule
+  fields: FieldValue[]
   onPatch: (key: string, value: string | number | string[]) => void
   onSave: () => void
 }
@@ -31,8 +31,8 @@ function toArray(value: string | string[]) {
   return Array.isArray(value) ? value : [value]
 }
 
-export function RuleForm({ rule, passengers, onPatch, onSave }: RuleFormProps) {
-  if (rule.type === "TOTAL_RULE") return null
+export function RuleForm({ rule, fields, onPatch, onSave }: RuleFormProps) {
+  if (rule.type === "SUM_CAP_RULE") return null
 
   return (
     <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-end">
@@ -40,12 +40,12 @@ export function RuleForm({ rule, passengers, onPatch, onSave }: RuleFormProps) {
         {rule.type === SIMPLE_RULE && (
           <>
             <Field>
-              <FieldLabel htmlFor={`${rule.id}-pax`}>Passenger</FieldLabel>
-              <PaxSelect
-                id={`${rule.id}-pax`}
-                value={rule.pax}
-                passengers={passengers}
-                onChange={(value) => onPatch("pax", Array.isArray(value) ? value[0] : value)}
+              <FieldLabel htmlFor={`${rule.id}-field`}>Passenger</FieldLabel>
+              <FieldSelect
+                id={`${rule.id}-field`}
+                value={rule.fieldId}
+                fields={fields}
+                onChange={(value) => onPatch("fieldId", Array.isArray(value) ? value[0] : value)}
               />
             </Field>
             <Field>
@@ -70,12 +70,12 @@ export function RuleForm({ rule, passengers, onPatch, onSave }: RuleFormProps) {
         {rule.type === RANGE_RULE && (
           <>
             <Field>
-              <FieldLabel htmlFor={`${rule.id}-pax`}>Passenger</FieldLabel>
-              <PaxSelect
-                id={`${rule.id}-pax`}
-                value={rule.pax}
-                passengers={passengers}
-                onChange={(value) => onPatch("pax", Array.isArray(value) ? value[0] : value)}
+              <FieldLabel htmlFor={`${rule.id}-field`}>Passenger</FieldLabel>
+              <FieldSelect
+                id={`${rule.id}-field`}
+                value={rule.fieldId}
+                fields={fields}
+                onChange={(value) => onPatch("fieldId", Array.isArray(value) ? value[0] : value)}
               />
             </Field>
             <Field>
@@ -97,15 +97,15 @@ export function RuleForm({ rule, passengers, onPatch, onSave }: RuleFormProps) {
           </>
         )}
 
-        {rule.type === PAX_VS_PAX_RULE && (
+        {rule.type === FIELD_VS_FIELD_RULE && (
           <>
             <Field>
               <FieldLabel htmlFor={`${rule.id}-left`}>Left</FieldLabel>
-              <PaxSelect
+              <FieldSelect
                 id={`${rule.id}-left`}
-                value={rule.leftPax}
-                passengers={passengers}
-                onChange={(value) => onPatch("leftPax", Array.isArray(value) ? value[0] : value)}
+                value={rule.leftFieldId}
+                fields={fields}
+                onChange={(value) => onPatch("leftFieldId", Array.isArray(value) ? value[0] : value)}
               />
             </Field>
             <Field>
@@ -118,26 +118,26 @@ export function RuleForm({ rule, passengers, onPatch, onSave }: RuleFormProps) {
             </Field>
             <Field>
               <FieldLabel htmlFor={`${rule.id}-right`}>Right</FieldLabel>
-              <PaxSelect
+              <FieldSelect
                 id={`${rule.id}-right`}
-                value={rule.rightPax}
-                passengers={passengers}
-                onChange={(value) => onPatch("rightPax", Array.isArray(value) ? value[0] : value)}
+                value={rule.rightFieldId}
+                fields={fields}
+                onChange={(value) => onPatch("rightFieldId", Array.isArray(value) ? value[0] : value)}
               />
             </Field>
           </>
         )}
 
-        {rule.type === SUM_PAX_VS_PAX_RULE && (
+        {rule.type === SUM_FIELDS_VS_FIELD_RULE && (
           <>
             <Field>
-              <FieldLabel htmlFor={`${rule.id}-paxs`}>Sum of</FieldLabel>
-              <PaxSelect
-                id={`${rule.id}-paxs`}
+              <FieldLabel htmlFor={`${rule.id}-fieldIds`}>Sum of</FieldLabel>
+              <FieldSelect
+                id={`${rule.id}-fieldIds`}
                 multiple
-                value={rule.paxs}
-                passengers={passengers}
-                onChange={(value) => onPatch("paxs", toArray(value))}
+                value={rule.fieldIds}
+                fields={fields}
+                onChange={(value) => onPatch("fieldIds", toArray(value))}
               />
             </Field>
             <Field>
@@ -149,27 +149,27 @@ export function RuleForm({ rule, passengers, onPatch, onSave }: RuleFormProps) {
               />
             </Field>
             <Field>
-              <FieldLabel htmlFor={`${rule.id}-pax`}>Passenger</FieldLabel>
-              <PaxSelect
-                id={`${rule.id}-pax`}
-                value={rule.pax}
-                passengers={passengers}
-                onChange={(value) => onPatch("pax", Array.isArray(value) ? value[0] : value)}
+              <FieldLabel htmlFor={`${rule.id}-field`}>Passenger</FieldLabel>
+              <FieldSelect
+                id={`${rule.id}-field`}
+                value={rule.fieldId}
+                fields={fields}
+                onChange={(value) => onPatch("fieldId", Array.isArray(value) ? value[0] : value)}
               />
             </Field>
           </>
         )}
 
-        {rule.type === SUM_PAX_VS_NUMBER_RULE && (
+        {rule.type === SUM_FIELDS_VS_NUMBER_RULE && (
           <>
             <Field>
-              <FieldLabel htmlFor={`${rule.id}-paxs`}>Sum of</FieldLabel>
-              <PaxSelect
-                id={`${rule.id}-paxs`}
+              <FieldLabel htmlFor={`${rule.id}-fieldIds`}>Sum of</FieldLabel>
+              <FieldSelect
+                id={`${rule.id}-fieldIds`}
                 multiple
-                value={rule.paxs}
-                passengers={passengers}
-                onChange={(value) => onPatch("paxs", toArray(value))}
+                value={rule.fieldIds}
+                fields={fields}
+                onChange={(value) => onPatch("fieldIds", toArray(value))}
               />
             </Field>
             <Field>
@@ -191,16 +191,16 @@ export function RuleForm({ rule, passengers, onPatch, onSave }: RuleFormProps) {
           </>
         )}
 
-        {rule.type === SUM_PAX_VS_SUM_PAX_RULE && (
+        {rule.type === SUM_FIELDS_VS_SUM_FIELDS_RULE && (
           <>
             <Field>
               <FieldLabel htmlFor={`${rule.id}-left`}>Left sum</FieldLabel>
-              <PaxSelect
+              <FieldSelect
                 id={`${rule.id}-left`}
                 multiple
-                value={rule.leftPaxs}
-                passengers={passengers}
-                onChange={(value) => onPatch("leftPaxs", toArray(value))}
+                value={rule.leftFieldIds}
+                fields={fields}
+                onChange={(value) => onPatch("leftFieldIds", toArray(value))}
               />
             </Field>
             <Field>
@@ -213,26 +213,26 @@ export function RuleForm({ rule, passengers, onPatch, onSave }: RuleFormProps) {
             </Field>
             <Field>
               <FieldLabel htmlFor={`${rule.id}-right`}>Right sum</FieldLabel>
-              <PaxSelect
+              <FieldSelect
                 id={`${rule.id}-right`}
                 multiple
-                value={rule.rightPaxs}
-                passengers={passengers}
-                onChange={(value) => onPatch("rightPaxs", toArray(value))}
+                value={rule.rightFieldIds}
+                fields={fields}
+                onChange={(value) => onPatch("rightFieldIds", toArray(value))}
               />
             </Field>
           </>
         )}
 
-        {rule.type === PAX_VS_PAX_MULTIPLY_RULE && (
+        {rule.type === FIELD_VS_FIELD_MULTIPLY_RULE && (
           <>
             <Field>
               <FieldLabel htmlFor={`${rule.id}-left`}>Left</FieldLabel>
-              <PaxSelect
+              <FieldSelect
                 id={`${rule.id}-left`}
-                value={rule.leftPax}
-                passengers={passengers}
-                onChange={(value) => onPatch("leftPax", Array.isArray(value) ? value[0] : value)}
+                value={rule.leftFieldId}
+                fields={fields}
+                onChange={(value) => onPatch("leftFieldId", Array.isArray(value) ? value[0] : value)}
               />
             </Field>
             <Field>
@@ -245,11 +245,11 @@ export function RuleForm({ rule, passengers, onPatch, onSave }: RuleFormProps) {
             </Field>
             <Field>
               <FieldLabel htmlFor={`${rule.id}-right`}>Right</FieldLabel>
-              <PaxSelect
+              <FieldSelect
                 id={`${rule.id}-right`}
-                value={rule.rightPax}
-                passengers={passengers}
-                onChange={(value) => onPatch("rightPax", Array.isArray(value) ? value[0] : value)}
+                value={rule.rightFieldId}
+                fields={fields}
+                onChange={(value) => onPatch("rightFieldId", Array.isArray(value) ? value[0] : value)}
               />
             </Field>
             <Field>
@@ -264,16 +264,16 @@ export function RuleForm({ rule, passengers, onPatch, onSave }: RuleFormProps) {
           </>
         )}
 
-        {rule.type === SUM_PAX_VS_PAX_MULTIPLY_RULE && (
+        {rule.type === SUM_FIELDS_VS_FIELD_MULTIPLY_RULE && (
           <>
             <Field>
-              <FieldLabel htmlFor={`${rule.id}-paxs`}>Sum of</FieldLabel>
-              <PaxSelect
-                id={`${rule.id}-paxs`}
+              <FieldLabel htmlFor={`${rule.id}-fieldIds`}>Sum of</FieldLabel>
+              <FieldSelect
+                id={`${rule.id}-fieldIds`}
                 multiple
-                value={rule.paxs}
-                passengers={passengers}
-                onChange={(value) => onPatch("paxs", toArray(value))}
+                value={rule.fieldIds}
+                fields={fields}
+                onChange={(value) => onPatch("fieldIds", toArray(value))}
               />
             </Field>
             <Field>
@@ -285,12 +285,12 @@ export function RuleForm({ rule, passengers, onPatch, onSave }: RuleFormProps) {
               />
             </Field>
             <Field>
-              <FieldLabel htmlFor={`${rule.id}-pax`}>Passenger</FieldLabel>
-              <PaxSelect
-                id={`${rule.id}-pax`}
-                value={rule.pax}
-                passengers={passengers}
-                onChange={(value) => onPatch("pax", Array.isArray(value) ? value[0] : value)}
+              <FieldLabel htmlFor={`${rule.id}-field`}>Passenger</FieldLabel>
+              <FieldSelect
+                id={`${rule.id}-field`}
+                value={rule.fieldId}
+                fields={fields}
+                onChange={(value) => onPatch("fieldId", Array.isArray(value) ? value[0] : value)}
               />
             </Field>
             <Field>
@@ -305,16 +305,16 @@ export function RuleForm({ rule, passengers, onPatch, onSave }: RuleFormProps) {
           </>
         )}
 
-        {rule.type === SUM_PAX_VS_SUM_PAX_MULTIPLY_RULE && (
+        {rule.type === SUM_FIELDS_VS_SUM_FIELDS_MULTIPLY_RULE && (
           <>
             <Field>
               <FieldLabel htmlFor={`${rule.id}-left`}>Left sum</FieldLabel>
-              <PaxSelect
+              <FieldSelect
                 id={`${rule.id}-left`}
                 multiple
-                value={rule.leftPaxs}
-                passengers={passengers}
-                onChange={(value) => onPatch("leftPaxs", toArray(value))}
+                value={rule.leftFieldIds}
+                fields={fields}
+                onChange={(value) => onPatch("leftFieldIds", toArray(value))}
               />
             </Field>
             <Field>
@@ -327,12 +327,12 @@ export function RuleForm({ rule, passengers, onPatch, onSave }: RuleFormProps) {
             </Field>
             <Field>
               <FieldLabel htmlFor={`${rule.id}-right`}>Right sum</FieldLabel>
-              <PaxSelect
+              <FieldSelect
                 id={`${rule.id}-right`}
                 multiple
-                value={rule.rightPaxs}
-                passengers={passengers}
-                onChange={(value) => onPatch("rightPaxs", toArray(value))}
+                value={rule.rightFieldIds}
+                fields={fields}
+                onChange={(value) => onPatch("rightFieldIds", toArray(value))}
               />
             </Field>
             <Field>

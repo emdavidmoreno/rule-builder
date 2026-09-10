@@ -13,7 +13,11 @@ import {
 } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
-import { RULE_COMPACT_FORMAT, RULE_DEFAULT_FORMAT, RULE_EXTENDED_FORMAT } from "@/types/rule-builder"
+import {
+  RULE_COMPACT_FORMAT,
+  RULE_DEFAULT_FORMAT,
+  RULE_EXTENDED_FORMAT,
+} from "@/core/builder"
 import { useRuleBuilder } from "@/store/rule-builder-store"
 
 export function RuleJsonViewer() {

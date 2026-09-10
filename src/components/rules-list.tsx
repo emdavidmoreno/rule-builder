@@ -20,22 +20,22 @@ import {
 } from "@/components/ui/empty"
 import { Field, FieldLabel } from "@/components/ui/field"
 import { Separator } from "@/components/ui/separator"
-import { DROPDOWN_ACTIONS } from "@/constants"
 import { NumberInput } from "@/components/selectors/number-input"
+import { DROPDOWN_ACTIONS } from "@/core/builder"
 import { useRuleBuilder } from "@/store/rule-builder-store"
 
 export function RulesList() {
-  const { customRules, activePassengers, totalPassengers, dispatch } = useRuleBuilder()
+  const { customRules, activeFields, totalCap, dispatch } = useRuleBuilder()
 
   return (
     <div className="flex flex-col gap-4">
       <Field className="max-w-48">
-        <FieldLabel htmlFor="total-passengers">Total passengers</FieldLabel>
+        <FieldLabel htmlFor="total-cap">Total passengers</FieldLabel>
         <NumberInput
-          id="total-passengers"
-          value={totalPassengers}
+          id="total-cap"
+          value={totalCap}
           min={1}
-          onChange={(value) => dispatch({ type: "setTotalPassengers", total: value })}
+          onChange={(value) => dispatch({ type: "setTotalCap", total: value })}
         />
       </Field>
 
@@ -90,7 +90,7 @@ export function RulesList() {
               {rule.isEditing ? (
                 <RuleForm
                   rule={rule}
-                  passengers={activePassengers}
+                  fields={activeFields}
                   onPatch={(key, value) =>
                     dispatch({ type: "patchRule", id: rule.id, key, value })
                   }
@@ -99,7 +99,7 @@ export function RulesList() {
               ) : (
                 <RuleView
                   rule={rule}
-                  passengers={activePassengers}
+                  fields={activeFields}
                   onEdit={() => dispatch({ type: "editRule", id: rule.id })}
                   onRemove={() => dispatch({ type: "removeRule", id: rule.id })}
                 />

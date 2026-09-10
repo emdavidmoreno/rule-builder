@@ -8,32 +8,28 @@ import {
   type ReactNode,
 } from "react"
 
-import { DEFAULT_TOTAL_PASSENGERS } from "@/constants"
-import { convertRulesToString } from "@/lib/convert-rules"
 import {
-  createInitialPassengers,
   createInitialRules,
   createRule,
-  resetPassengerCounts,
-} from "@/lib/create-rule"
-import { DEMO_TENANTS, loadTenants } from "@/data/tenants"
-import {
+  DEFAULT_SUM_CAP,
+  resetFieldCounts,
   RULE_DEFAULT_FORMAT,
-  TOTAL_RULE,
+  SUM_CAP_RULE,
   type AddableRuleKind,
+  type BuilderRule,
   type BuilderStep,
-  type Passenger,
-  type Rule,
+  type FieldValue,
   type RuleFormat,
-  type Tenant,
-} from "@/types/rule-builder"
+} from "@/core/builder"
+import { convertRulesToString } from "@/core/export"
+import { DEMO_TENANTS, loadTenants, type Tenant } from "@/data/tenants"
 
 type TenantsStatus = "loading" | "ready" | "error"
 
 type BuilderState = {
-  passengers: Passenger[]
-  totalPassengers: number
-  rules: Rule[]
+  fields: FieldValue[]
+  totalCap: number
+  rules: BuilderRule[]
   format: RuleFormat
   step: BuilderStep
   selectedTenant: Tenant | null
@@ -42,10 +38,10 @@ type BuilderState = {
 }
 
 type BuilderAction =
-  | { type: "setPassengerLabel"; key: string; label: string }
-  | { type: "togglePassenger"; key: string; isActive: boolean }
-  | { type: "setTotalPassengers"; total: number }
-  | { type: "setPassengerValue"; key: string; value: number }
+  | { type: "setFieldLabel"; id: string; label: string }
+  | { type: "toggleField"; id: string; isActive: boolean }
+  | { type: "setTotalCap"; total: number }
+  | { type: "setFieldValue"; id: string; value: number }
   | { type: "addRule"; kind: AddableRuleKind }
   | { type: "patchRule"; id: string; key: string; value: string | number | string[] }
   | { type: "saveRule"; id: string }
@@ -58,30 +54,39 @@ type BuilderAction =
   | { type: "tenantsFailed" }
 
 type BuilderStore = BuilderState & {
-  activePassengers: Passenger[]
-  customRules: Rule[]
+  activeFields: FieldValue[]
+  customRules: BuilderRule[]
   rulesString: string
   dispatch: (action: BuilderAction) => void
 }
 
 const RuleBuilderContext = createContext<BuilderStore | null>(null)
 
-function activeKeys(passengers: Passenger[]) {
-  return passengers.filter((passenger) => passenger.isActive).map((passenger) => passenger.key)
+function activeIds(fields: FieldValue[]) {
+  return fields.filter((field) => field.isActive).map((field) => field.id)
 }
 
-function syncTotalRule(rules: Rule[], paxs: string[], total: number): Rule[] {
+function syncSumCapRule(rules: BuilderRule[], fieldIds: string[], total: number): BuilderRule[] {
   return rules.map((rule) =>
-    rule.type === TOTAL_RULE ? { ...rule, paxs, total } : rule,
+    rule.type === SUM_CAP_RULE ? { ...rule, fieldIds, total } : rule,
   )
 }
 
+function createInitialFields(): FieldValue[] {
+  return Array.from({ length: 9 }, (_, index) => ({
+    id: `age${index + 1}`,
+    label: index === 0 ? "Adults" : "",
+    value: index === 0 ? 1 : 0,
+    isActive: index === 0,
+  }))
+}
+
 function createInitialState(): BuilderState {
-  const passengers = createInitialPassengers()
+  const fields = createInitialFields()
   return {
-    passengers,
-    totalPassengers: DEFAULT_TOTAL_PASSENGERS,
-    rules: createInitialRules(passengers),
+    fields,
+    totalCap: DEFAULT_SUM_CAP,
+    rules: createInitialRules(fields),
     format: RULE_DEFAULT_FORMAT,
     step: 1,
     selectedTenant: null,
@@ -92,55 +97,55 @@ function createInitialState(): BuilderState {
 
 function reducer(state: BuilderState, action: BuilderAction): BuilderState {
   switch (action.type) {
-    case "setPassengerLabel": {
-      const passengers = state.passengers.map((passenger) =>
-        passenger.key === action.key ? { ...passenger, label: action.label } : passenger,
+    case "setFieldLabel": {
+      const fields = state.fields.map((field) =>
+        field.id === action.id ? { ...field, label: action.label } : field,
       )
-      return { ...state, passengers }
+      return { ...state, fields }
     }
-    case "togglePassenger": {
-      const passengers = state.passengers.map((passenger) => {
-        if (passenger.key !== action.key) return passenger
+    case "toggleField": {
+      const fields = state.fields.map((field) => {
+        if (field.id !== action.id) return field
         return {
-          ...passenger,
+          ...field,
           isActive: action.isActive,
-          label: action.isActive ? passenger.label : "",
-          value: action.isActive ? passenger.value : 0,
+          label: action.isActive ? field.label : "",
+          value: action.isActive ? field.value : 0,
         }
       })
       return {
         ...state,
-        passengers,
-        rules: syncTotalRule(state.rules, activeKeys(passengers), state.totalPassengers),
+        fields,
+        rules: syncSumCapRule(state.rules, activeIds(fields), state.totalCap),
       }
     }
-    case "setTotalPassengers": {
+    case "setTotalCap": {
       return {
         ...state,
-        totalPassengers: action.total,
-        rules: syncTotalRule(state.rules, activeKeys(state.passengers), action.total),
+        totalCap: action.total,
+        rules: syncSumCapRule(state.rules, activeIds(state.fields), action.total),
       }
     }
-    case "setPassengerValue": {
+    case "setFieldValue": {
       return {
         ...state,
-        passengers: state.passengers.map((passenger) =>
-          passenger.key === action.key ? { ...passenger, value: action.value } : passenger,
+        fields: state.fields.map((field) =>
+          field.id === action.id ? { ...field, value: action.value } : field,
         ),
       }
     }
     case "addRule": {
       return {
         ...state,
-        rules: [...state.rules, createRule(action.kind, state.passengers)],
-        passengers: resetPassengerCounts(state.passengers),
+        rules: [...state.rules, createRule(action.kind, state.fields)],
+        fields: resetFieldCounts(state.fields),
       }
     }
     case "patchRule": {
       return {
         ...state,
         rules: state.rules.map((rule) =>
-          rule.id === action.id ? ({ ...rule, [action.key]: action.value } as Rule) : rule,
+          rule.id === action.id ? ({ ...rule, [action.key]: action.value } as BuilderRule) : rule,
         ),
       }
     }
@@ -150,7 +155,7 @@ function reducer(state: BuilderState, action: BuilderAction): BuilderState {
         rules: state.rules.map((rule) =>
           rule.id === action.id ? { ...rule, isEditing: false } : rule,
         ),
-        passengers: resetPassengerCounts(state.passengers),
+        fields: resetFieldCounts(state.fields),
       }
     }
     case "editRule": {
@@ -165,7 +170,7 @@ function reducer(state: BuilderState, action: BuilderAction): BuilderState {
       return {
         ...state,
         rules: state.rules.filter((rule) => rule.id !== action.id),
-        passengers: resetPassengerCounts(state.passengers),
+        fields: resetFieldCounts(state.fields),
       }
     }
     case "setFormat":
@@ -201,11 +206,11 @@ export function RuleBuilderProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const value = useMemo<BuilderStore>(() => {
-    const activePassengers = state.passengers.filter((passenger) => passenger.isActive)
+    const activeFields = state.fields.filter((field) => field.isActive)
     return {
       ...state,
-      activePassengers,
-      customRules: state.rules.filter((rule) => rule.type !== TOTAL_RULE),
+      activeFields,
+      customRules: state.rules.filter((rule) => rule.type !== SUM_CAP_RULE),
       rulesString: convertRulesToString(state.rules, state.format),
       dispatch,
     }

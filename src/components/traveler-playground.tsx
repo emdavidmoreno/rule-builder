@@ -15,25 +15,23 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "@/components/ui/input-group"
-import { evaluateRules } from "@/lib/evaluate-rules"
+import { evaluateRules } from "@/core/engine"
 import { useRuleBuilder } from "@/store/rule-builder-store"
 
 export function TravelerPlayground() {
-  const { activePassengers, passengers, rules, dispatch } = useRuleBuilder()
+  const { activeFields, fields, rules, dispatch } = useRuleBuilder()
 
-  function canSetValue(key: string, value: number) {
+  function canSetValue(id: string, value: number) {
     if (value < 0) return false
-    const nextTravelers = passengers
-      .filter((passenger) => passenger.isActive)
-      .map((passenger) =>
-        passenger.key === key ? { ...passenger, value } : passenger,
-      )
-    return evaluateRules(rules, nextTravelers)
+    const nextFields = fields
+      .filter((field) => field.isActive)
+      .map((field) => (field.id === id ? { ...field, value } : field))
+    return evaluateRules(rules, nextFields)
   }
 
-  function setValue(key: string, value: number) {
-    if (!canSetValue(key, value)) return
-    dispatch({ type: "setPassengerValue", key, value })
+  function setValue(id: string, value: number) {
+    if (!canSetValue(id, value)) return
+    dispatch({ type: "setFieldValue", id, value })
   }
 
   return (
@@ -52,27 +50,27 @@ export function TravelerPlayground() {
           </AlertDescription>
         </Alert>
         <FieldGroup className="gap-3">
-          {activePassengers.map((passenger) => {
-            const decrementDisabled = !canSetValue(passenger.key, passenger.value - 1)
-            const incrementDisabled = !canSetValue(passenger.key, passenger.value + 1)
+          {activeFields.map((field) => {
+            const decrementDisabled = !canSetValue(field.id, field.value - 1)
+            const incrementDisabled = !canSetValue(field.id, field.value + 1)
             return (
-              <Field key={passenger.key} orientation="horizontal">
-                <FieldLabel htmlFor={`${passenger.key}-count`} className="min-w-28">
-                  {passenger.label || passenger.key}
+              <Field key={field.id} orientation="horizontal">
+                <FieldLabel htmlFor={`${field.id}-count`} className="min-w-28">
+                  {field.label || field.id}
                 </FieldLabel>
                 <InputGroup className="max-w-40">
                   <InputGroupInput
-                    id={`${passenger.key}-count`}
+                    id={`${field.id}-count`}
                     readOnly
-                    value={String(passenger.value)}
-                    aria-label={`${passenger.label || passenger.key} count`}
+                    value={String(field.value)}
+                    aria-label={`${field.label || field.id} count`}
                   />
                   <InputGroupAddon align="inline-start">
                     <InputGroupButton
                       size="icon-xs"
-                      aria-label={`Decrease ${passenger.label || passenger.key}`}
+                      aria-label={`Decrease ${field.label || field.id}`}
                       disabled={decrementDisabled}
-                      onClick={() => setValue(passenger.key, passenger.value - 1)}
+                      onClick={() => setValue(field.id, field.value - 1)}
                     >
                       <MinusIcon />
                     </InputGroupButton>
@@ -80,9 +78,9 @@ export function TravelerPlayground() {
                   <InputGroupAddon align="inline-end">
                     <InputGroupButton
                       size="icon-xs"
-                      aria-label={`Increase ${passenger.label || passenger.key}`}
+                      aria-label={`Increase ${field.label || field.id}`}
                       disabled={incrementDisabled}
-                      onClick={() => setValue(passenger.key, passenger.value + 1)}
+                      onClick={() => setValue(field.id, field.value + 1)}
                     >
                       <PlusIcon />
                     </InputGroupButton>

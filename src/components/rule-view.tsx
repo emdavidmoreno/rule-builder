@@ -2,43 +2,43 @@ import { PencilIcon, Trash2Icon } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { passengerLabel } from "@/lib/create-rule"
 import {
+  fieldLabel,
+  FIELD_VS_FIELD_MULTIPLY_RULE,
+  FIELD_VS_FIELD_RULE,
   LESS_THAN_OR_EQUAL_TO,
-  PAX_VS_PAX_MULTIPLY_RULE,
-  PAX_VS_PAX_RULE,
   RANGE_RULE,
   SIMPLE_RULE,
-  SUM_PAX_VS_NUMBER_RULE,
-  SUM_PAX_VS_PAX_MULTIPLY_RULE,
-  SUM_PAX_VS_PAX_RULE,
-  SUM_PAX_VS_SUM_PAX_MULTIPLY_RULE,
-  SUM_PAX_VS_SUM_PAX_RULE,
-  type Passenger,
-  type Rule,
-} from "@/types/rule-builder"
+  SUM_FIELDS_VS_FIELD_MULTIPLY_RULE,
+  SUM_FIELDS_VS_FIELD_RULE,
+  SUM_FIELDS_VS_NUMBER_RULE,
+  SUM_FIELDS_VS_SUM_FIELDS_MULTIPLY_RULE,
+  SUM_FIELDS_VS_SUM_FIELDS_RULE,
+  type BuilderRule,
+  type FieldValue,
+} from "@/core/builder"
 
 type RuleViewProps = {
-  rule: Rule
-  passengers: Passenger[]
+  rule: BuilderRule
+  fields: FieldValue[]
   onEdit: () => void
   onRemove: () => void
 }
 
-function SumLabel({ keys, passengers }: { keys: string[]; passengers: Passenger[] }) {
+function SumLabel({ keys, fields }: { keys: string[]; fields: FieldValue[] }) {
   return (
     <span>
-      Sum[{keys.map((key) => passengerLabel(passengers, key)).join(", ")}]
+      Sum[{keys.map((id) => fieldLabel(fields, id)).join(", ")}]
     </span>
   )
 }
 
-function RuleSummary({ rule, passengers }: { rule: Rule; passengers: Passenger[] }) {
+function RuleSummary({ rule, fields }: { rule: BuilderRule; fields: FieldValue[] }) {
   switch (rule.type) {
     case SIMPLE_RULE:
       return (
         <p className="flex flex-wrap items-center gap-1.5 text-sm">
-          <span className="font-medium">{passengerLabel(passengers, rule.pax)}</span>
+          <span className="font-medium">{fieldLabel(fields, rule.fieldId)}</span>
           <span className="text-muted-foreground">{rule.operator}</span>
           <span className="font-medium">{rule.number}</span>
         </p>
@@ -48,82 +48,82 @@ function RuleSummary({ rule, passengers }: { rule: Rule; passengers: Passenger[]
         <p className="flex flex-wrap items-center gap-1.5 text-sm">
           <span className="font-medium">{rule.min}</span>
           <span className="text-muted-foreground">{LESS_THAN_OR_EQUAL_TO}</span>
-          <span className="font-medium">{passengerLabel(passengers, rule.pax)}</span>
+          <span className="font-medium">{fieldLabel(fields, rule.fieldId)}</span>
           <span className="text-muted-foreground">{LESS_THAN_OR_EQUAL_TO}</span>
           <span className="font-medium">{rule.max}</span>
         </p>
       )
-    case PAX_VS_PAX_RULE:
+    case FIELD_VS_FIELD_RULE:
       return (
         <p className="flex flex-wrap items-center gap-1.5 text-sm">
-          <span className="font-medium">{passengerLabel(passengers, rule.leftPax)}</span>
+          <span className="font-medium">{fieldLabel(fields, rule.leftFieldId)}</span>
           <span className="text-muted-foreground">{rule.operator}</span>
-          <span className="font-medium">{passengerLabel(passengers, rule.rightPax)}</span>
+          <span className="font-medium">{fieldLabel(fields, rule.rightFieldId)}</span>
         </p>
       )
-    case SUM_PAX_VS_PAX_RULE:
+    case SUM_FIELDS_VS_FIELD_RULE:
       return (
         <p className="flex flex-wrap items-center gap-1.5 text-sm">
           <span className="font-medium">
-            <SumLabel keys={rule.paxs} passengers={passengers} />
+            <SumLabel keys={rule.fieldIds} fields={fields} />
           </span>
           <span className="text-muted-foreground">{rule.operator}</span>
-          <span className="font-medium">{passengerLabel(passengers, rule.pax)}</span>
+          <span className="font-medium">{fieldLabel(fields, rule.fieldId)}</span>
         </p>
       )
-    case SUM_PAX_VS_NUMBER_RULE:
+    case SUM_FIELDS_VS_NUMBER_RULE:
       return (
         <p className="flex flex-wrap items-center gap-1.5 text-sm">
           <span className="font-medium">
-            <SumLabel keys={rule.paxs} passengers={passengers} />
+            <SumLabel keys={rule.fieldIds} fields={fields} />
           </span>
           <span className="text-muted-foreground">{rule.operator}</span>
           <span className="font-medium">{rule.number}</span>
         </p>
       )
-    case SUM_PAX_VS_SUM_PAX_RULE:
+    case SUM_FIELDS_VS_SUM_FIELDS_RULE:
       return (
         <p className="flex flex-wrap items-center gap-1.5 text-sm">
           <span className="font-medium">
-            <SumLabel keys={rule.leftPaxs} passengers={passengers} />
+            <SumLabel keys={rule.leftFieldIds} fields={fields} />
           </span>
           <span className="text-muted-foreground">{rule.operator}</span>
           <span className="font-medium">
-            <SumLabel keys={rule.rightPaxs} passengers={passengers} />
+            <SumLabel keys={rule.rightFieldIds} fields={fields} />
           </span>
         </p>
       )
-    case PAX_VS_PAX_MULTIPLY_RULE:
+    case FIELD_VS_FIELD_MULTIPLY_RULE:
       return (
         <p className="flex flex-wrap items-center gap-1.5 text-sm">
-          <span className="font-medium">{passengerLabel(passengers, rule.leftPax)}</span>
+          <span className="font-medium">{fieldLabel(fields, rule.leftFieldId)}</span>
           <span className="text-muted-foreground">{rule.operator}</span>
           <span>
-            ({passengerLabel(passengers, rule.rightPax)} × {rule.multiplier})
+            ({fieldLabel(fields, rule.rightFieldId)} × {rule.multiplier})
           </span>
         </p>
       )
-    case SUM_PAX_VS_PAX_MULTIPLY_RULE:
+    case SUM_FIELDS_VS_FIELD_MULTIPLY_RULE:
       return (
         <p className="flex flex-wrap items-center gap-1.5 text-sm">
           <span className="font-medium">
-            <SumLabel keys={rule.paxs} passengers={passengers} />
+            <SumLabel keys={rule.fieldIds} fields={fields} />
           </span>
           <span className="text-muted-foreground">{rule.operator}</span>
           <span>
-            ({passengerLabel(passengers, rule.pax)} × {rule.multiplier})
+            ({fieldLabel(fields, rule.fieldId)} × {rule.multiplier})
           </span>
         </p>
       )
-    case SUM_PAX_VS_SUM_PAX_MULTIPLY_RULE:
+    case SUM_FIELDS_VS_SUM_FIELDS_MULTIPLY_RULE:
       return (
         <p className="flex flex-wrap items-center gap-1.5 text-sm">
           <span className="font-medium">
-            <SumLabel keys={rule.leftPaxs} passengers={passengers} />
+            <SumLabel keys={rule.leftFieldIds} fields={fields} />
           </span>
           <span className="text-muted-foreground">{rule.operator}</span>
           <span>
-            (<SumLabel keys={rule.rightPaxs} passengers={passengers} /> × {rule.multiplier})
+            (<SumLabel keys={rule.rightFieldIds} fields={fields} /> × {rule.multiplier})
           </span>
         </p>
       )
@@ -132,12 +132,12 @@ function RuleSummary({ rule, passengers }: { rule: Rule; passengers: Passenger[]
   }
 }
 
-export function RuleView({ rule, passengers, onEdit, onRemove }: RuleViewProps) {
+export function RuleView({ rule, fields, onEdit, onRemove }: RuleViewProps) {
   return (
     <div className="flex w-full items-center justify-between gap-3">
       <div className="flex min-w-0 flex-col gap-1">
         <Badge variant="secondary">{rule.type.replaceAll("_", " ")}</Badge>
-        <RuleSummary rule={rule} passengers={passengers} />
+        <RuleSummary rule={rule} fields={fields} />
       </div>
       <div className="flex shrink-0 items-center gap-1">
         <Button type="button" size="icon-sm" variant="outline" onClick={onEdit} aria-label="Edit rule">

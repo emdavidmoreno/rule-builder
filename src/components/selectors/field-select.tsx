@@ -6,26 +6,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import type { Passenger } from "@/types/rule-builder"
+import type { FieldValue } from "@/core/builder"
 
-type PaxSelectProps = {
+type FieldSelectProps = {
   id: string
   value: string | string[]
   multiple?: boolean
-  passengers: Passenger[]
+  fields: FieldValue[]
   onChange: (value: string | string[]) => void
 }
 
-export function PaxSelect({
+export function FieldSelect({
   id,
   value,
   multiple = false,
-  passengers,
+  fields,
   onChange,
-}: PaxSelectProps) {
-  const items = passengers.map((passenger) => ({
-    label: passenger.label || passenger.key,
-    value: passenger.key,
+}: FieldSelectProps) {
+  const items = fields.map((field) => ({
+    label: field.label || field.id,
+    value: field.id,
   }))
 
   if (multiple) {
@@ -41,7 +41,7 @@ export function PaxSelect({
           <SelectValue>
             {(current: string[]) =>
               current.length === 0
-                ? "Select passengers"
+                ? "Select fields"
                 : current
                     .map(
                       (key) =>

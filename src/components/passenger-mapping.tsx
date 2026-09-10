@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input"
 import { useRuleBuilder } from "@/store/rule-builder-store"
 
 export function PassengerMapping() {
-  const { passengers, dispatch } = useRuleBuilder()
+  const { fields, dispatch } = useRuleBuilder()
 
   return (
     <FieldSet>
@@ -20,38 +20,38 @@ export function PassengerMapping() {
         Enable passenger types and name them. Age 1 stays required as the adult slot.
       </FieldDescription>
       <FieldGroup className="gap-3">
-        {passengers.map((passenger, index) => {
+        {fields.map((field, index) => {
           const disabled = index === 0
           return (
             <Field
-              key={passenger.key}
+              key={field.id}
               orientation="horizontal"
               data-disabled={disabled || undefined}
             >
               <Checkbox
-                id={`${passenger.key}-active`}
-                checked={passenger.isActive}
+                id={`${field.id}-active`}
+                checked={field.isActive}
                 disabled={disabled}
                 onCheckedChange={(checked) =>
                   dispatch({
-                    type: "togglePassenger",
-                    key: passenger.key,
+                    type: "toggleField",
+                    id: field.id,
                     isActive: Boolean(checked),
                   })
                 }
               />
-              <FieldLabel htmlFor={`${passenger.key}-active`} className="min-w-28">
+              <FieldLabel htmlFor={`${field.id}-active`} className="min-w-28">
                 Passenger {index + 1}
               </FieldLabel>
               <Input
-                id={`${passenger.key}-label`}
+                id={`${field.id}-label`}
                 placeholder="Label"
-                value={passenger.label}
-                disabled={!passenger.isActive}
+                value={field.label}
+                disabled={!field.isActive}
                 onChange={(event) =>
                   dispatch({
-                    type: "setPassengerLabel",
-                    key: passenger.key,
+                    type: "setFieldLabel",
+                    id: field.id,
                     label: event.currentTarget.value,
                   })
                 }

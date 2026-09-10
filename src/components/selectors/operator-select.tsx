@@ -1,4 +1,4 @@
-import { COMPARISON_OPERATORS } from "@/constants"
+import { COMPARISON_OPERATORS } from "@/core/builder"
 import {
   Select,
   SelectContent,
@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import type { ComparisonOperator } from "@/types/rule-builder"
+import type { ComparisonOperator } from "@/core/builder"
 
 const items = COMPARISON_OPERATORS.map((operator) => ({
   label: operator,

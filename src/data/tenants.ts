@@ -1,4 +1,8 @@
-import type { Tenant } from "@/types/rule-builder"
+export type Tenant = {
+  code: string
+  name: string
+  hasFc: boolean
+}
 
 export const DEMO_TENANTS: Tenant[] = [
   { code: "AA", name: "American Airlines", hasFc: true },
