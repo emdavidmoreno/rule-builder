@@ -1,11 +1,10 @@
 import { ArrowLeftIcon, ArrowRightIcon, CopyIcon } from "lucide-react"
 import { toast } from "sonner"
 
-import { PassengerMapping } from "@/components/passenger-mapping"
+import { FieldMapping } from "@/components/field-mapping"
 import { RuleJsonViewer } from "@/components/rule-json-viewer"
 import { RulesList } from "@/components/rules-list"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { TravelerPlayground } from "@/components/traveler-playground"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -19,11 +18,39 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { evaluateRules } from "@/core/engine"
+import { applyDataToFields } from "@/core/registry/fields"
 import { cn } from "@/lib/utils"
 import { useRuleBuilder } from "@/store/rule-builder-store"
 
 export function Workspace() {
-  const { step, selectedTenant, rulesString, dispatch } = useRuleBuilder()
+  const {
+    step,
+    selectedTenant,
+    rulesString,
+    manifest,
+    fields,
+    activeFields,
+    rules,
+    playgroundData,
+    dispatch,
+  } = useRuleBuilder()
+
+  const Playground = manifest.Playground
+  const playgroundFields = manifest.fields.filter((def) =>
+    activeFields.some((field) => field.id === def.id),
+  )
+  const result = {
+    ok: evaluateRules(rules, activeFields),
+    failed: [] as { id: string; message: string }[],
+  }
+
+  function handlePlaygroundChange(data: Record<string, unknown>) {
+    const nextFields = applyDataToFields(fields, data)
+    const nextActive = nextFields.filter((field) => field.isActive)
+    if (!evaluateRules(rules, nextActive)) return
+    dispatch({ type: "setFieldsFromData", data })
+  }
 
   async function copyRules() {
     try {
@@ -39,7 +66,7 @@ export function Workspace() {
       <header className="flex h-14 items-center gap-2 border-b px-4">
         <SidebarTrigger />
         <Separator orientation="vertical" className="h-4" />
-        <h1 className="text-sm font-medium">Passenger rules playground</h1>
+        <h1 className="text-sm font-medium">{manifest.name}</h1>
         {selectedTenant && (
           <Badge variant="secondary" className="ms-1">
             {selectedTenant.code}
@@ -54,9 +81,7 @@ export function Workspace() {
         <Card className="w-full lg:max-w-xl">
           <CardHeader>
             <CardTitle>Build rules</CardTitle>
-            <CardDescription>
-              Map passenger types, then add JsonLogic constraints for the booking party.
-            </CardDescription>
+            <CardDescription>{manifest.description}</CardDescription>
             <ToggleGroup
               value={[String(step)]}
               onValueChange={(next) => {
@@ -72,7 +97,7 @@ export function Workspace() {
           </CardHeader>
           <CardContent>
             <div hidden={step !== 1}>
-              <PassengerMapping />
+              <FieldMapping />
             </div>
             <div hidden={step !== 2}>
               <RulesList />
@@ -103,7 +128,12 @@ export function Workspace() {
         </Card>
 
         <div className={cn("flex w-full flex-1 flex-col gap-4")}>
-          <TravelerPlayground />
+          <Playground
+            fields={playgroundFields}
+            data={playgroundData}
+            onChange={handlePlaygroundChange}
+            result={result}
+          />
           <RuleJsonViewer />
         </div>
       </div>

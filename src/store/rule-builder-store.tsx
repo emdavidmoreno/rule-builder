@@ -9,7 +9,6 @@ import {
 } from "react"
 
 import {
-  createInitialRules,
   createRule,
   DEFAULT_SUM_CAP,
   resetFieldCounts,
@@ -22,11 +21,15 @@ import {
   type RuleFormat,
 } from "@/core/builder"
 import { convertRulesToString } from "@/core/export"
+import { applyDataToFields, dataFromFields, fieldsFromDefs } from "@/core/registry/fields"
+import type { DomainManifest } from "@/core/registry/types"
 import { DEMO_TENANTS, loadTenants, type Tenant } from "@/data/tenants"
+import { airlineManifest } from "@/domains/airline/manifest"
 
 type TenantsStatus = "loading" | "ready" | "error"
 
 type BuilderState = {
+  manifest: DomainManifest
   fields: FieldValue[]
   totalCap: number
   rules: BuilderRule[]
@@ -38,10 +41,10 @@ type BuilderState = {
 }
 
 type BuilderAction =
-  | { type: "setFieldLabel"; id: string; label: string }
   | { type: "toggleField"; id: string; isActive: boolean }
   | { type: "setTotalCap"; total: number }
   | { type: "setFieldValue"; id: string; value: number }
+  | { type: "setFieldsFromData"; data: Record<string, unknown> }
   | { type: "addRule"; kind: AddableRuleKind }
   | { type: "patchRule"; id: string; key: string; value: string | number | string[] }
   | { type: "saveRule"; id: string }
@@ -57,6 +60,7 @@ type BuilderStore = BuilderState & {
   activeFields: FieldValue[]
   customRules: BuilderRule[]
   rulesString: string
+  playgroundData: Record<string, unknown>
   dispatch: (action: BuilderAction) => void
 }
 
@@ -72,21 +76,13 @@ function syncSumCapRule(rules: BuilderRule[], fieldIds: string[], total: number)
   )
 }
 
-function createInitialFields(): FieldValue[] {
-  return Array.from({ length: 9 }, (_, index) => ({
-    id: `age${index + 1}`,
-    label: index === 0 ? "Adults" : "",
-    value: index === 0 ? 1 : 0,
-    isActive: index === 0,
-  }))
-}
-
 function createInitialState(): BuilderState {
-  const fields = createInitialFields()
+  const fields = fieldsFromDefs(airlineManifest.fields)
   return {
+    manifest: airlineManifest,
     fields,
     totalCap: DEFAULT_SUM_CAP,
-    rules: createInitialRules(fields),
+    rules: airlineManifest.presetRules.map((rule) => ({ ...rule })),
     format: RULE_DEFAULT_FORMAT,
     step: 1,
     selectedTenant: null,
@@ -97,19 +93,14 @@ function createInitialState(): BuilderState {
 
 function reducer(state: BuilderState, action: BuilderAction): BuilderState {
   switch (action.type) {
-    case "setFieldLabel": {
-      const fields = state.fields.map((field) =>
-        field.id === action.id ? { ...field, label: action.label } : field,
-      )
-      return { ...state, fields }
-    }
     case "toggleField": {
+      const def = state.manifest.fields.find((field) => field.id === action.id)
+      if (def?.required && !action.isActive) return state
       const fields = state.fields.map((field) => {
         if (field.id !== action.id) return field
         return {
           ...field,
           isActive: action.isActive,
-          label: action.isActive ? field.label : "",
           value: action.isActive ? field.value : 0,
         }
       })
@@ -132,6 +123,12 @@ function reducer(state: BuilderState, action: BuilderAction): BuilderState {
         fields: state.fields.map((field) =>
           field.id === action.id ? { ...field, value: action.value } : field,
         ),
+      }
+    }
+    case "setFieldsFromData": {
+      return {
+        ...state,
+        fields: applyDataToFields(state.fields, action.data),
       }
     }
     case "addRule": {
@@ -212,6 +209,7 @@ export function RuleBuilderProvider({ children }: { children: ReactNode }) {
       activeFields,
       customRules: state.rules.filter((rule) => rule.type !== SUM_CAP_RULE),
       rulesString: convertRulesToString(state.rules, state.format),
+      playgroundData: dataFromFields(activeFields),
       dispatch,
     }
   }, [state])

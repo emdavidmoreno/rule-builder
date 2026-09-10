@@ -7,21 +7,21 @@ import {
   FieldLegend,
   FieldSet,
 } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
 import { useRuleBuilder } from "@/store/rule-builder-store"
 
-export function PassengerMapping() {
-  const { fields, dispatch } = useRuleBuilder()
+export function FieldMapping() {
+  const { fields, manifest, dispatch } = useRuleBuilder()
 
   return (
     <FieldSet>
-      <FieldLegend>Passenger mapping</FieldLegend>
+      <FieldLegend>Field mapping</FieldLegend>
       <FieldDescription>
-        Enable passenger types and name them. Age 1 stays required as the adult slot.
+        Enable the categories this rule set uses. Required fields stay on.
       </FieldDescription>
       <FieldGroup className="gap-3">
-        {fields.map((field, index) => {
-          const disabled = index === 0
+        {fields.map((field) => {
+          const def = manifest.fields.find((item) => item.id === field.id)
+          const disabled = def?.required === true
           return (
             <Field
               key={field.id}
@@ -41,21 +41,11 @@ export function PassengerMapping() {
                 }
               />
               <FieldLabel htmlFor={`${field.id}-active`} className="min-w-28">
-                Passenger {index + 1}
+                {field.label}
               </FieldLabel>
-              <Input
-                id={`${field.id}-label`}
-                placeholder="Label"
-                value={field.label}
-                disabled={!field.isActive}
-                onChange={(event) =>
-                  dispatch({
-                    type: "setFieldLabel",
-                    id: field.id,
-                    label: event.currentTarget.value,
-                  })
-                }
-              />
+              {def?.helpText ? (
+                <FieldDescription>{def.helpText}</FieldDescription>
+              ) : null}
             </Field>
           )
         })}

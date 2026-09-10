@@ -21,11 +21,11 @@ import {
 import { Field, FieldLabel } from "@/components/ui/field"
 import { Separator } from "@/components/ui/separator"
 import { NumberInput } from "@/components/selectors/number-input"
-import { DROPDOWN_ACTIONS } from "@/core/builder"
+import { SIMPLE_RULE } from "@/core/builder"
 import { useRuleBuilder } from "@/store/rule-builder-store"
 
 export function RulesList() {
-  const { customRules, activeFields, totalCap, dispatch } = useRuleBuilder()
+  const { customRules, activeFields, totalCap, manifest, dispatch } = useRuleBuilder()
 
   return (
     <div className="flex flex-col gap-4">
@@ -52,10 +52,10 @@ export function RulesList() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuGroup>
-              {DROPDOWN_ACTIONS.map((item) => (
+              {manifest.ruleTemplates.map((item) => (
                 <DropdownMenuItem
-                  key={item.action}
-                  onClick={() => dispatch({ type: "addRule", kind: item.action })}
+                  key={item.id}
+                  onClick={() => dispatch({ type: "addRule", kind: item.kind })}
                 >
                   {item.label}
                 </DropdownMenuItem>
@@ -77,7 +77,7 @@ export function RulesList() {
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
-            <Button onClick={() => dispatch({ type: "addRule", kind: "SIMPLE_RULE" })}>
+            <Button onClick={() => dispatch({ type: "addRule", kind: SIMPLE_RULE })}>
               <PlusIcon data-icon="inline-start" />
               Add a simple rule
             </Button>
