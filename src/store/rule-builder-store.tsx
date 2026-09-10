@@ -56,15 +56,24 @@ function activeIds(fields: FieldValue[]) {
 
 function syncSumCapRule(
   rules: BuilderRule[],
-  fieldIds: string[],
+  activeFieldIds: string[],
   total: number,
   fields: FieldValue[],
 ): BuilderRule[] {
-  return rules.map((rule) =>
-    rule.type === SUM_CAP_RULE
-      ? withRuleMeta({ ...rule, fieldIds, total, label: "", message: "" }, fields)
-      : rule,
-  )
+  return rules.map((rule) => {
+    if (rule.type !== SUM_CAP_RULE) return rule
+    const fieldIds = rule.fieldIds.filter((id) => activeFieldIds.includes(id))
+    return withRuleMeta(
+      {
+        ...rule,
+        fieldIds: fieldIds.length > 0 ? fieldIds : activeFieldIds,
+        total,
+        label: "",
+        message: "",
+      },
+      fields,
+    )
+  })
 }
 
 function createInitialState(manifest: DomainManifest): BuilderState {
