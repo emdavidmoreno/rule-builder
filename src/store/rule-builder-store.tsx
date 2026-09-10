@@ -1,12 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import {
-  createContext,
-  use,
-  useEffect,
-  useMemo,
-  useReducer,
-  type ReactNode,
-} from "react"
+import { createContext, use, useMemo, useReducer, type ReactNode } from "react"
 
 import {
   createRule,
@@ -23,10 +16,6 @@ import {
 import { convertRulesToString } from "@/core/export"
 import { applyDataToFields, dataFromFields, fieldsFromDefs } from "@/core/registry/fields"
 import type { DomainManifest } from "@/core/registry/types"
-import { DEMO_TENANTS, loadTenants, type Tenant } from "@/data/tenants"
-import { airlineManifest } from "@/domains/airline/manifest"
-
-type TenantsStatus = "loading" | "ready" | "error"
 
 type BuilderState = {
   manifest: DomainManifest
@@ -35,9 +24,6 @@ type BuilderState = {
   rules: BuilderRule[]
   format: RuleFormat
   step: BuilderStep
-  selectedTenant: Tenant | null
-  tenants: Tenant[]
-  tenantsStatus: TenantsStatus
 }
 
 type BuilderAction =
@@ -52,9 +38,6 @@ type BuilderAction =
   | { type: "removeRule"; id: string }
   | { type: "setFormat"; format: RuleFormat }
   | { type: "setStep"; step: BuilderStep }
-  | { type: "selectTenant"; tenant: Tenant }
-  | { type: "tenantsLoaded"; tenants: Tenant[] }
-  | { type: "tenantsFailed" }
 
 type BuilderStore = BuilderState & {
   activeFields: FieldValue[]
@@ -76,18 +59,15 @@ function syncSumCapRule(rules: BuilderRule[], fieldIds: string[], total: number)
   )
 }
 
-function createInitialState(): BuilderState {
-  const fields = fieldsFromDefs(airlineManifest.fields)
+function createInitialState(manifest: DomainManifest): BuilderState {
+  const fields = fieldsFromDefs(manifest.fields)
   return {
-    manifest: airlineManifest,
+    manifest,
     fields,
     totalCap: DEFAULT_SUM_CAP,
-    rules: airlineManifest.presetRules.map((rule) => ({ ...rule })),
+    rules: manifest.presetRules.map((rule) => ({ ...rule })),
     format: RULE_DEFAULT_FORMAT,
     step: 1,
-    selectedTenant: null,
-    tenants: [],
-    tenantsStatus: "loading",
   }
 }
 
@@ -174,33 +154,17 @@ function reducer(state: BuilderState, action: BuilderAction): BuilderState {
       return { ...state, format: action.format }
     case "setStep":
       return { ...state, step: action.step }
-    case "selectTenant":
-      return { ...state, selectedTenant: action.tenant }
-    case "tenantsLoaded":
-      return { ...state, tenants: action.tenants, tenantsStatus: "ready" }
-    case "tenantsFailed":
-      return { ...state, tenants: DEMO_TENANTS, tenantsStatus: "error" }
   }
 }
 
-export function RuleBuilderProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(reducer, undefined, createInitialState)
-
-  useEffect(() => {
-    let cancelled = false
-
-    loadTenants()
-      .then((tenants) => {
-        if (!cancelled) dispatch({ type: "tenantsLoaded", tenants })
-      })
-      .catch(() => {
-        if (!cancelled) dispatch({ type: "tenantsFailed" })
-      })
-
-    return () => {
-      cancelled = true
-    }
-  }, [])
+export function RuleBuilderProvider({
+  manifest,
+  children,
+}: {
+  manifest: DomainManifest
+  children: ReactNode
+}) {
+  const [state, dispatch] = useReducer(reducer, manifest, createInitialState)
 
   const value = useMemo<BuilderStore>(() => {
     const activeFields = state.fields.filter((field) => field.isActive)

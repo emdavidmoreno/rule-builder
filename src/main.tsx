@@ -1,22 +1,21 @@
 import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
+import { RouterProvider, createRouter } from "@tanstack/react-router"
 
-import { TooltipProvider } from "@/components/ui/tooltip"
-import { SidebarProvider } from "@/components/ui/sidebar"
-import { Toaster } from "@/components/ui/sonner"
-import { RuleBuilderProvider } from "@/store/rule-builder-store"
-import App from "./App.tsx"
+import "@/app/register-domains"
+import { routeTree } from "@/routeTree.gen"
 import "./App.css"
+
+const router = createRouter({ routeTree })
+
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router
+  }
+}
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <TooltipProvider>
-      <RuleBuilderProvider>
-        <SidebarProvider>
-          <App />
-          <Toaster />
-        </SidebarProvider>
-      </RuleBuilderProvider>
-    </TooltipProvider>
+    <RouterProvider router={router} />
   </StrictMode>,
 )

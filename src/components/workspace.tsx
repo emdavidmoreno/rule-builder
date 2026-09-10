@@ -26,7 +26,6 @@ import { useRuleBuilder } from "@/store/rule-builder-store"
 export function Workspace() {
   const {
     step,
-    selectedTenant,
     rulesString,
     manifest,
     fields,
@@ -67,11 +66,9 @@ export function Workspace() {
         <SidebarTrigger />
         <Separator orientation="vertical" className="h-4" />
         <h1 className="text-sm font-medium">{manifest.name}</h1>
-        {selectedTenant && (
-          <Badge variant="secondary" className="ms-1">
-            {selectedTenant.code}
-          </Badge>
-        )}
+        <Badge variant="secondary" className="ms-1">
+          {manifest.id}
+        </Badge>
         <div className="ms-auto">
           <ThemeToggle />
         </div>

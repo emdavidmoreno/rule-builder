@@ -1,6 +1,6 @@
-import { useState, useTransition } from "react"
-import { PlaneIcon } from "lucide-react"
+import { Link } from "@tanstack/react-router"
 
+import { DomainIcon } from "@/app/domain-icons"
 import { Badge } from "@/components/ui/badge"
 import {
   Sidebar,
@@ -10,82 +10,67 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
-  SidebarInput,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSkeleton,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { cn } from "@/lib/utils"
+import { listDomains } from "@/core/registry"
 import { useRuleBuilder } from "@/store/rule-builder-store"
 
 export function AppSidebar() {
-  const { tenants, tenantsStatus, selectedTenant, dispatch } = useRuleBuilder()
-  const [query, setQuery] = useState("")
-  const [isPending, startTransition] = useTransition()
-
-  const filtered = tenants.filter((tenant) => {
-    const haystack = `${tenant.name} ${tenant.code}`.toLowerCase()
-    return haystack.includes(query.trim().toLowerCase())
-  })
+  const { manifest } = useRuleBuilder()
+  const domains = listDomains()
 
   return (
     <Sidebar>
       <SidebarHeader className="flex flex-col gap-3 p-3">
-        <div className="flex flex-col gap-0.5 px-1">
+        <Link to="/" className="flex flex-col gap-0.5 px-1">
           <span className="text-sm font-medium">Rule Builder</span>
-          <span className="text-xs text-muted-foreground">Passenger rules playground</span>
-        </div>
-        <SidebarInput
-          placeholder="Search tenant"
-          value={query}
-          onChange={(event) => {
-            const next = event.currentTarget.value
-            startTransition(() => setQuery(next))
-          }}
-        />
+          <span className="text-xs text-muted-foreground">Choose a domain</span>
+        </Link>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Tenants</SidebarGroupLabel>
+          <SidebarGroupLabel>Domains</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className={cn(isPending && "opacity-70")}>
-              {tenantsStatus === "loading" &&
-                Array.from({ length: 6 }, (_, index) => (
-                  <SidebarMenuItem key={index}>
-                    <SidebarMenuSkeleton showIcon />
-                  </SidebarMenuItem>
-                ))}
-              {tenantsStatus !== "loading" &&
-                filtered.map((tenant) => (
-                  <SidebarMenuItem key={tenant.code}>
-                    <SidebarMenuButton
-                      isActive={selectedTenant?.code === tenant.code}
-                      onClick={() => dispatch({ type: "selectTenant", tenant })}
-                    >
-                      <PlaneIcon />
-                      <span className="truncate">{tenant.name}</span>
-                      {!tenant.hasFc && (
+            <SidebarMenu>
+              {domains.map((domain) => {
+                const isDraft = domain.status === "draft"
+                const isActive = manifest.id === domain.id
+                return (
+                  <SidebarMenuItem key={domain.id}>
+                    {isDraft ? (
+                      <SidebarMenuButton disabled>
+                        <DomainIcon name={domain.icon} />
+                        <span className="truncate">{domain.name}</span>
                         <Badge variant="outline" className="ms-auto">
-                          {tenant.code}
+                          Soon
                         </Badge>
-                      )}
-                    </SidebarMenuButton>
+                      </SidebarMenuButton>
+                    ) : (
+                      <SidebarMenuButton
+                        isActive={isActive}
+                        render={
+                          <Link
+                            to="/d/$domainId"
+                            params={{ domainId: domain.id }}
+                          />
+                        }
+                      >
+                        <DomainIcon name={domain.icon} />
+                        <span className="truncate">{domain.name}</span>
+                      </SidebarMenuButton>
+                    )}
                   </SidebarMenuItem>
-                ))}
+                )
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        {selectedTenant ? (
-          <p className="px-2 text-xs text-muted-foreground">
-            Selected {selectedTenant.name} ({selectedTenant.code})
-          </p>
-        ) : (
-          <p className="px-2 text-xs text-muted-foreground">Select a tenant for context.</p>
-        )}
+        <p className="px-2 text-xs text-muted-foreground">{manifest.description}</p>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
