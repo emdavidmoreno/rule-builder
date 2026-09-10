@@ -1,58 +1,67 @@
 # Rule Builder
 
-Visual playground for airline **passenger occupancy rules**. Map passenger types, compose constraints in the UI, and compile them to [JsonLogic](https://jsonlogic.com/) you can copy into a booking engine.
+Visual playground for **occupancy rules** across domains (flight bookings, hotel rooms, and more). Compose constraints in the UI, test them live, and export portable [JsonLogic](https://jsonlogic.com/) plus a versioned RuleSet.
 
-The generated rules always combine under an `and` node. A live playground evaluates that payload with `json-logic-js` and blocks traveler counts that would violate it.
+The builder is domain-agnostic. Airline is the first registered domain; hotel is fully wired; cruise, car rental, and tours are draft stubs.
 
 ## What it does
 
-1. **Select a tenant** from the sidebar (demo airlines, or a remote catalog).
-2. **Map passenger types** — enable slots (`age1`…`age9`) and label them (Adults, Children, Infants, …). Age 1 stays required as the adult slot.
-3. **Add rules** — cap party size, compare counts, ranges, sums, and multipliers.
-4. **Test live** — increment/decrement counts; invalid changes never commit.
-5. **Copy JsonLogic** — default, compact, or pretty-printed JSON.
+1. **Pick a domain** at `/` (flight occupancy, room occupancy, …).
+2. **Map categories** — enable optional counters from the domain vocabulary.
+3. **Add rules** — cap totals, compare counts, ranges, sums, and multipliers. Each rule has a label and an error message.
+4. **Test live** — increment/decrement counts; the playground lists every rule that fails.
+5. **Export** — JsonLogic tree, RuleSet JSON, or a runnable snippet with your rules baked in.
 
-Typical use: “at least one adult, at most 9 passengers, infants cannot exceed adults.”
+Typical airline use: “at least one adult, at most 9 travelers, infants cannot exceed adults.”
+Typical hotel use: “at most 4 guests, at most two children per adult, cribs only with infants.”
 
 ## Rule types
 
-Every set includes a hidden **total rule**: the sum of active passenger types must be `<=` the configured party size.
+Every set includes a **total cap** rule: the configured fields must sum to `<=` the cap.
 
 | Type | Meaning |
 | --- | --- |
-| Simple | One passenger type vs a number (`Adults >= 1`) |
+| Simple | One field vs a number (`Adults >= 1`) |
 | Range | Inclusive bounds (`1 <= Adults <= 9`) |
-| Pax vs Pax | Two passenger types (`Infants <= Adults`) |
-| Pax vs Pax × Number | Type vs type times a multiplier (`Children <= Adults * 2`) |
-| Sum Pax vs Number | Sum of types vs a number |
-| Sum Pax vs Pax | Sum of types vs one type |
-| Sum Pax vs Sum Pax | Two sums compared |
-| Sum Pax vs Pax × Number | Sum vs one type times a multiplier |
-| Sum Pax vs Sum Pax × Number | Sum vs another sum times a multiplier |
+| Field vs Field | Two fields (`Infants <= Adults`) |
+| Field vs Field × Number | Field vs field times a multiplier (`Children <= Adults * 2`) |
+| Sum vs Number | Sum of fields vs a number |
+| Sum vs Field | Sum of fields vs one field |
+| Sum vs Sum | Two sums compared |
+| Sum vs Field × Number | Sum vs one field times a multiplier |
+| Sum vs Sum × Number | Sum vs another sum times a multiplier |
 
 Comparison operators: `==`, `>`, `>=`, `<`, `<=`.
 
-## Example output
+## Example RuleSet
 
 ```json
 {
-  "and": [
-    { "<=": [{ "+": [{ "var": "age1" }, { "var": "age2" }] }, 9] },
-    { "and": [{ ">=": [{ "var": "age1" }, 1] }, { "<=": [{ "var": "age1" }, 9] }] }
+  "version": "1.0.0",
+  "domainId": "airline",
+  "rules": [
+    {
+      "id": "…",
+      "label": "Maximum 9",
+      "message": "The total cannot exceed 9.",
+      "enabled": true,
+      "logic": { "<=": [{ "+": [{ "var": "adults" }, { "var": "children" }, { "var": "infants" }] }, 9] }
+    }
   ]
 }
 ```
 
-Variables are passenger keys (`age1`, `age2`, …). Evaluation data is `{ age1: count, age2: count, ... }`.
+Variables come from the domain manifest (`adults`, `children`, `infants`, …). Evaluation data is a flat object of those keys. The JSON is stock json-logic — no custom operators.
 
 ## Stack
 
 - React 19, TypeScript, Vite
+- TanStack Router (`/` domain picker, `/d/:domainId` workspace)
 - Tailwind CSS 4 and shadcn/ui (Base UI)
 - `json-logic-js` for compilation and live evaluation
 - React Compiler (Babel preset)
 
-State lives in `RuleBuilderProvider` (`src/store/rule-builder-store.tsx`). Conversion is in `src/lib/convert-rules.ts`; evaluation in `src/lib/evaluate-rules.ts`.
+State lives in `RuleBuilderProvider` (`src/store/rule-builder-store.tsx`). Conversion is in `src/core/engine`; evaluation in `src/core/ruleset`. See [ARCHITECTURE.md](./ARCHITECTURE.md) to add a domain.
 
 ## Getting started
 
@@ -70,35 +79,22 @@ The app serves at `http://localhost:5173`.
 | `npm run preview` | Preview the production build |
 | `npm run lint` | ESLint |
 
-## Tenants
-
-Without extra config, the sidebar uses the built-in demo list in `src/data/tenants.ts`.
-
-To load a remote catalog, set:
-
-```bash
-VITE_TENANTS_URL=https://example.com/tenants
-VITE_TENANTS_API_KEY=optional-key
-```
-
-Expected payload: a JSON array of `{ "code": string, "name": string, "hasFc": boolean }`. Invalid or empty responses fall back to the demo tenants. `VITE_TENANTS_API_KEY` is sent as `x-api-key` when present.
-
-Vite only exposes variables prefixed with `VITE_`. Put them in `.env.local` (gitignored via `*.local`).
-
 ## Project layout
 
 ```
 src/
-├── components/     UI: mapping, rules, playground, JsonLogic viewer
-├── data/           Tenant catalog (demo + optional remote fetch)
-├── lib/            Rule factories, JsonLogic conversion, evaluation
-├── store/          Builder state (reducer + context)
-└── types/          Rule, passenger, tenant, and JsonLogic types
+├── app/            Domain registration, picker, icons
+├── core/           Engine, builder, ruleset, export, registry
+├── domains/        airline, hotel, plus draft stubs
+├── routes/         / and /d/$domainId
+├── components/     Workspace chrome and shadcn/ui
+└── store/          Builder state (reducer + context)
 ```
 
 ## Workflow in the UI
 
-1. **Mapping** — toggle passenger slots and assign labels.
-2. **Rules** — set total party size, then add/edit/remove constraints.
-3. **Live passengers** — counts that fail JsonLogic stay disabled.
-4. **JsonLogic output** — switch format and copy to the clipboard.
+1. **Choose a domain** on the home screen.
+2. **Mapping** — toggle optional categories from the manifest.
+3. **Rules** — set the total cap, then add/edit/remove constraints and their error messages.
+4. **Playground** — counts that fail a rule show that rule's message.
+5. **Export** — JsonLogic, RuleSet, or a paste-ready snippet.

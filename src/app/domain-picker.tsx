@@ -52,7 +52,10 @@ export function DomainPicker() {
                     Coming soon
                   </Button>
                 ) : (
-                  <Button render={<Link to="/d/$domainId" params={{ domainId: domain.id }} />}>
+                  <Button
+                    render={<Link to="/d/$domainId" params={{ domainId: domain.id }} />}
+                    nativeButton={false}
+                  >
                     Open builder
                   </Button>
                 )}

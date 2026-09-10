@@ -46,9 +46,9 @@ export function Workspace() {
   async function copyRules() {
     try {
       await navigator.clipboard.writeText(rulesString)
-      toast.success("Passenger rules copied.")
+      toast.success("Rules copied.")
     } catch {
-      toast.error("Could not copy passenger rules.")
+      toast.error("Could not copy rules.")
     }
   }
 

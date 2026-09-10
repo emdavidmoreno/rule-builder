@@ -78,11 +78,13 @@ function syncSumCapRule(
 
 function createInitialState(manifest: DomainManifest): BuilderState {
   const fields = fieldsFromDefs(manifest.fields)
+  const rules = manifest.presetRules.map((rule) => withRuleMeta({ ...rule }, fields))
+  const capRule = rules.find((rule) => rule.type === SUM_CAP_RULE)
   return {
     manifest,
     fields,
-    totalCap: DEFAULT_SUM_CAP,
-    rules: manifest.presetRules.map((rule) => withRuleMeta({ ...rule }, fields)),
+    totalCap: capRule && capRule.type === SUM_CAP_RULE ? capRule.total : DEFAULT_SUM_CAP,
+    rules,
     format: RULE_DEFAULT_FORMAT,
     step: 1,
   }

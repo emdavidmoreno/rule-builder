@@ -30,7 +30,7 @@ export function RulesList() {
   return (
     <div className="flex flex-col gap-4">
       <Field className="max-w-48">
-        <FieldLabel htmlFor="total-cap">Total passengers</FieldLabel>
+        <FieldLabel htmlFor="total-cap">Total cap</FieldLabel>
         <NumberInput
           id="total-cap"
           value={totalCap}
@@ -43,7 +43,7 @@ export function RulesList() {
 
       <div className="flex items-center justify-between gap-3">
         <p className="text-sm text-muted-foreground">
-          Party size is always capped by the hidden total rule.
+          Occupancy is always capped by the hidden total rule.
         </p>
         <DropdownMenu>
           <DropdownMenuTrigger render={<Button />}>
@@ -73,7 +73,7 @@ export function RulesList() {
             </EmptyMedia>
             <EmptyTitle>No custom rules yet</EmptyTitle>
             <EmptyDescription>
-              Add a comparison, range, or sum rule. The total passenger cap is always included.
+              Add a comparison, range, or sum rule. The total cap is always included.
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
