@@ -7,6 +7,7 @@ import {
   resetFieldCounts,
   RULE_DEFAULT_FORMAT,
   SUM_CAP_RULE,
+  withRuleMeta,
   type AddableRuleKind,
   type BuilderRule,
   type BuilderStep,
@@ -32,7 +33,7 @@ type BuilderAction =
   | { type: "setFieldValue"; id: string; value: number }
   | { type: "setFieldsFromData"; data: Record<string, unknown> }
   | { type: "addRule"; kind: AddableRuleKind }
-  | { type: "patchRule"; id: string; key: string; value: string | number | string[] }
+  | { type: "patchRule"; id: string; key: string; value: string | number | string[] | boolean }
   | { type: "saveRule"; id: string }
   | { type: "editRule"; id: string }
   | { type: "removeRule"; id: string }
@@ -53,9 +54,16 @@ function activeIds(fields: FieldValue[]) {
   return fields.filter((field) => field.isActive).map((field) => field.id)
 }
 
-function syncSumCapRule(rules: BuilderRule[], fieldIds: string[], total: number): BuilderRule[] {
+function syncSumCapRule(
+  rules: BuilderRule[],
+  fieldIds: string[],
+  total: number,
+  fields: FieldValue[],
+): BuilderRule[] {
   return rules.map((rule) =>
-    rule.type === SUM_CAP_RULE ? { ...rule, fieldIds, total } : rule,
+    rule.type === SUM_CAP_RULE
+      ? withRuleMeta({ ...rule, fieldIds, total, label: "", message: "" }, fields)
+      : rule,
   )
 }
 
@@ -65,7 +73,7 @@ function createInitialState(manifest: DomainManifest): BuilderState {
     manifest,
     fields,
     totalCap: DEFAULT_SUM_CAP,
-    rules: manifest.presetRules.map((rule) => ({ ...rule })),
+    rules: manifest.presetRules.map((rule) => withRuleMeta({ ...rule }, fields)),
     format: RULE_DEFAULT_FORMAT,
     step: 1,
   }
@@ -87,14 +95,14 @@ function reducer(state: BuilderState, action: BuilderAction): BuilderState {
       return {
         ...state,
         fields,
-        rules: syncSumCapRule(state.rules, activeIds(fields), state.totalCap),
+        rules: syncSumCapRule(state.rules, activeIds(fields), state.totalCap, fields),
       }
     }
     case "setTotalCap": {
       return {
         ...state,
         totalCap: action.total,
-        rules: syncSumCapRule(state.rules, activeIds(state.fields), action.total),
+        rules: syncSumCapRule(state.rules, activeIds(state.fields), action.total, state.fields),
       }
     }
     case "setFieldValue": {
@@ -130,7 +138,9 @@ function reducer(state: BuilderState, action: BuilderAction): BuilderState {
       return {
         ...state,
         rules: state.rules.map((rule) =>
-          rule.id === action.id ? { ...rule, isEditing: false } : rule,
+          rule.id === action.id
+            ? withRuleMeta({ ...rule, isEditing: false }, state.fields)
+            : rule,
         ),
         fields: resetFieldCounts(state.fields),
       }
@@ -173,7 +183,7 @@ export function RuleBuilderProvider({
       activeFields,
       customRules: state.rules.filter((rule) => rule.type !== SUM_CAP_RULE),
       rulesString: convertRulesToString(state.rules, state.format),
-      playgroundData: dataFromFields(activeFields),
+      playgroundData: dataFromFields(state.fields),
       dispatch,
     }
   }, [state])

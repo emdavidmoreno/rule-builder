@@ -1,7 +1,10 @@
 import {
   createId,
   createSumCapRule,
+  FIELD_VS_FIELD_RULE,
+  LESS_THAN_OR_EQUAL_TO,
   RANGE_RULE,
+  withRuleMeta,
   type BuilderRule,
   type FieldValue,
 } from "@/core/builder"
@@ -56,14 +59,34 @@ export const AIRLINE_SAMPLE_CASES: SampleCase[] = [
 export function createAirlinePresetRules(fields: FieldValue[]): BuilderRule[] {
   const activeIds = fields.filter((field) => field.isActive).map((field) => field.id)
   return [
-    createSumCapRule(activeIds, 9),
-    {
-      id: createId(),
-      type: RANGE_RULE,
-      fieldId: "adults",
-      min: 1,
-      max: 9,
-      isEditing: false,
-    },
+    createSumCapRule(activeIds, 9, fields),
+    withRuleMeta(
+      {
+        id: createId(),
+        type: RANGE_RULE,
+        fieldId: "adults",
+        min: 1,
+        max: 9,
+        isEditing: false,
+        enabled: true,
+        label: "At least one adult",
+        message: "There must be between 1 and 9 adults.",
+      },
+      fields,
+    ),
+    withRuleMeta(
+      {
+        id: createId(),
+        type: FIELD_VS_FIELD_RULE,
+        leftFieldId: "infants",
+        operator: LESS_THAN_OR_EQUAL_TO,
+        rightFieldId: "adults",
+        isEditing: false,
+        enabled: true,
+        label: "Infants cannot exceed adults",
+        message: "There cannot be more infants than adults.",
+      },
+      fields,
+    ),
   ]
 }

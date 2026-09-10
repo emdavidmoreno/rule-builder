@@ -1,7 +1,10 @@
 import { CheckIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { NumberInput } from "@/components/selectors/number-input"
 import { OperatorSelect } from "@/components/selectors/operator-select"
 import { FieldSelect } from "@/components/selectors/field-select"
@@ -23,7 +26,7 @@ import {
 type RuleFormProps = {
   rule: BuilderRule
   fields: FieldValue[]
-  onPatch: (key: string, value: string | number | string[]) => void
+  onPatch: (key: string, value: string | number | string[] | boolean) => void
   onSave: () => void
 }
 
@@ -37,10 +40,34 @@ export function RuleForm({ rule, fields, onPatch, onSave }: RuleFormProps) {
   return (
     <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-end">
       <FieldGroup className="flex-1 gap-3">
+        <Field>
+          <FieldLabel htmlFor={`${rule.id}-label`}>Label</FieldLabel>
+          <Input
+            id={`${rule.id}-label`}
+            value={rule.label}
+            onChange={(event) => onPatch("label", event.currentTarget.value)}
+          />
+        </Field>
+        <Field>
+          <FieldLabel htmlFor={`${rule.id}-message`}>Error message</FieldLabel>
+          <Textarea
+            id={`${rule.id}-message`}
+            value={rule.message}
+            onChange={(event) => onPatch("message", event.currentTarget.value)}
+          />
+        </Field>
+        <Field orientation="horizontal">
+          <Checkbox
+            id={`${rule.id}-enabled`}
+            checked={rule.enabled}
+            onCheckedChange={(checked) => onPatch("enabled", Boolean(checked))}
+          />
+          <FieldLabel htmlFor={`${rule.id}-enabled`}>Enabled</FieldLabel>
+        </Field>
         {rule.type === SIMPLE_RULE && (
           <>
             <Field>
-              <FieldLabel htmlFor={`${rule.id}-field`}>Passenger</FieldLabel>
+              <FieldLabel htmlFor={`${rule.id}-field`}>Field</FieldLabel>
               <FieldSelect
                 id={`${rule.id}-field`}
                 value={rule.fieldId}
@@ -70,7 +97,7 @@ export function RuleForm({ rule, fields, onPatch, onSave }: RuleFormProps) {
         {rule.type === RANGE_RULE && (
           <>
             <Field>
-              <FieldLabel htmlFor={`${rule.id}-field`}>Passenger</FieldLabel>
+              <FieldLabel htmlFor={`${rule.id}-field`}>Field</FieldLabel>
               <FieldSelect
                 id={`${rule.id}-field`}
                 value={rule.fieldId}
@@ -149,7 +176,7 @@ export function RuleForm({ rule, fields, onPatch, onSave }: RuleFormProps) {
               />
             </Field>
             <Field>
-              <FieldLabel htmlFor={`${rule.id}-field`}>Passenger</FieldLabel>
+              <FieldLabel htmlFor={`${rule.id}-field`}>Field</FieldLabel>
               <FieldSelect
                 id={`${rule.id}-field`}
                 value={rule.fieldId}
@@ -285,7 +312,7 @@ export function RuleForm({ rule, fields, onPatch, onSave }: RuleFormProps) {
               />
             </Field>
             <Field>
-              <FieldLabel htmlFor={`${rule.id}-field`}>Passenger</FieldLabel>
+              <FieldLabel htmlFor={`${rule.id}-field`}>Field</FieldLabel>
               <FieldSelect
                 id={`${rule.id}-field`}
                 value={rule.fieldId}

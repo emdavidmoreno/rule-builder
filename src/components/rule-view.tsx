@@ -136,8 +136,9 @@ export function RuleView({ rule, fields, onEdit, onRemove }: RuleViewProps) {
   return (
     <div className="flex w-full items-center justify-between gap-3">
       <div className="flex min-w-0 flex-col gap-1">
-        <Badge variant="secondary">{rule.type.replaceAll("_", " ")}</Badge>
+        <Badge variant="secondary">{rule.label || rule.type.replaceAll("_", " ")}</Badge>
         <RuleSummary rule={rule} fields={fields} />
+        <p className="text-sm text-muted-foreground">{rule.message}</p>
       </div>
       <div className="flex shrink-0 items-center gap-1">
         <Button type="button" size="icon-sm" variant="outline" onClick={onEdit} aria-label="Edit rule">

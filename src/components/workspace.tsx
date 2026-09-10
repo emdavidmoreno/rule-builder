@@ -18,8 +18,7 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
-import { evaluateRules } from "@/core/engine"
-import { applyDataToFields } from "@/core/registry/fields"
+import { evaluateRuleSet } from "@/core/ruleset"
 import { cn } from "@/lib/utils"
 import { useRuleBuilder } from "@/store/rule-builder-store"
 
@@ -28,7 +27,6 @@ export function Workspace() {
     step,
     rulesString,
     manifest,
-    fields,
     activeFields,
     rules,
     playgroundData,
@@ -39,15 +37,9 @@ export function Workspace() {
   const playgroundFields = manifest.fields.filter((def) =>
     activeFields.some((field) => field.id === def.id),
   )
-  const result = {
-    ok: evaluateRules(rules, activeFields),
-    failed: [] as { id: string; message: string }[],
-  }
+  const result = evaluateRuleSet(manifest.id, rules, playgroundData, manifest.fields)
 
   function handlePlaygroundChange(data: Record<string, unknown>) {
-    const nextFields = applyDataToFields(fields, data)
-    const nextActive = nextFields.filter((field) => field.isActive)
-    if (!evaluateRules(rules, nextActive)) return
     dispatch({ type: "setFieldsFromData", data })
   }
 

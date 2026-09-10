@@ -24,7 +24,7 @@ function counterValue(data: Record<string, unknown>, id: string) {
   return typeof value === "number" && Number.isFinite(value) ? value : 0
 }
 
-export function AirlinePlayground({ fields, data, onChange }: PlaygroundProps) {
+export function AirlinePlayground({ fields, data, onChange, result }: PlaygroundProps) {
   function setValue(id: string, value: number) {
     const def = fields.find((field) => field.id === id)
     const min = def?.min ?? 0
@@ -39,16 +39,29 @@ export function AirlinePlayground({ fields, data, onChange }: PlaygroundProps) {
       <CardHeader>
         <CardTitle>Live passengers</CardTitle>
         <CardDescription>
-          Adjust counts to test the generated JsonLogic. Invalid changes are blocked.
+          Adjust counts to test the generated JsonLogic. Failed rules show their messages below.
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <Alert>
-          <AlertTitle>Playground</AlertTitle>
-          <AlertDescription>
-            Increment and decrement only commit when every rule still evaluates to true.
-          </AlertDescription>
-        </Alert>
+        {result.ok ? (
+          <Alert>
+            <AlertTitle>All rules passed</AlertTitle>
+            <AlertDescription>
+              Current counts satisfy every enabled rule.
+            </AlertDescription>
+          </Alert>
+        ) : (
+          <Alert variant="destructive">
+            <AlertTitle>Rules failed</AlertTitle>
+            <AlertDescription>
+              <ul className="flex flex-col gap-1">
+                {result.failed.map((item) => (
+                  <li key={item.id}>{item.message}</li>
+                ))}
+              </ul>
+            </AlertDescription>
+          </Alert>
+        )}
         {AIRLINE_SAMPLE_CASES.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {AIRLINE_SAMPLE_CASES.map((sample) => (

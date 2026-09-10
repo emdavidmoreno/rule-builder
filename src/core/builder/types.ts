@@ -53,6 +53,9 @@ export type FieldValue = {
 type RuleBase = {
   id: string
   isEditing: boolean
+  label: string
+  message: string
+  enabled: boolean
 }
 
 export type SumCapRule = RuleBase & {

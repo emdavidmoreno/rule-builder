@@ -1,6 +1,9 @@
 import type { ComponentType } from "react"
 
 import type { AddableRuleKind, BuilderRule, JsonLogicNode } from "@/core/builder/types"
+import type { EvaluationResult } from "@/core/ruleset/types"
+
+export type { EvaluationResult }
 
 export type FieldType = "counter" | "number" | "boolean" | "enum" | "string" | "date"
 
@@ -38,11 +41,6 @@ export type RuleTemplate = {
 export type SampleCase = {
   label: string
   data: Record<string, unknown>
-}
-
-export type EvaluationResult = {
-  ok: boolean
-  failed: { id: string; message: string }[]
 }
 
 export type PlaygroundProps = {
